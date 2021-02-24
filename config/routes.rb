@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # mount_devise_token_auth_for 'User', at: 'auth'
+
   # === === === Sample === === ===
   root 'application#index'
   get '/api/sample', controller: :api, action: :sample
@@ -7,6 +9,15 @@ Rails.application.routes.draw do
 
 
   # === === === MatcherClone === === ===
+  devise_for :users
+
+  namespace :api do
+    namespace :v1 do
+      mount_devise_token_auth_for "User", at: "auth"
+    end
+  end
+
+  # /api/v1/auth
   
 
   # The priority is based upon order of creation: first created -> highest priority.

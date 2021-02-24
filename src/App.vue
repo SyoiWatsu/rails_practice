@@ -2,13 +2,18 @@
   #app.App
     .header
       .header_item
+        span Sample : 
         router-link.link(:to="{ name: 'Home' }") Home
-      .header_item
+        span / 
         router-link.link(:to="{ name: 'Sample' }") Sample
-      .header_item
+        span / 
         router-link.link(:to="{ name : 'New' }") New
-      .header_item
+        span / 
         router-link.link(:to="{ name : 'Index' }") Index
+      .header_item
+        span MatcherClone : 
+        router-link.link(:to="{ name: 'SignUp' }") SignUp
+        span / 
     .main
       router-view
 </template>
