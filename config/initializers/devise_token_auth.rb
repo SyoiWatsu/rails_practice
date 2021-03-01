@@ -3,7 +3,7 @@
 DeviseTokenAuth.setup do |config|
 
   # set the confirm_success_url
-  config.default_confirm_success_url = "http://localhost:5000/"
+  # config.default_confirm_success_url = "http://localhost:5000/"
 
   # enable the support of separate routes for standard Devise
   config.enable_standard_devise_support = true
