@@ -41,6 +41,14 @@ export default {
   methods: {
     signIn : function(){
       console.log('SignInボタンが押された！');
+      
+      //ユーザーの入力情報を受け取る
+      const name = this.name;
+      const email = this.email;
+      const password = this.password;
+      console.log('name : ' + name);
+
+      //受け取った入力情報を元にSignUp
     }
   },
 }
