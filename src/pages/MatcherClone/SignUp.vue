@@ -7,17 +7,19 @@
     </div>
     <div>
       <label for="Mail">Mail : </label>
-      <input type="text" id="Mail" v-model="mail">
+      <input type="text" id="Mail" v-model="email">
     </div>
     <div>
       <label for="Password">Password : </label>
       <input type="text" id="Password" v-model="password">
     </div>
-    <button v-on:click="signIn">Sign Up</button>
+    <button v-on:click="signUp">Sign Up</button>
   </div>
 </template>
 
 <script>
+import axios from "axios"; //axiosを使う準備
+
 //他のファイルでimportされたときに戻り値
 export default {
   components: {
@@ -28,7 +30,7 @@ export default {
   data() {
     return {
       name : "",
-      mail : "",
+      email : "",
       password : "",
     };
   },
@@ -39,17 +41,39 @@ export default {
   mounted() {
   },
   methods: {
-    signIn : function(){
-      console.log('SignInボタンが押された！');
+    signUp : function(){
+      console.log("SignUpボタンが押された！");
+      console.log("email : " + this.email);
+      console.log("password : " + this.password);
       
-      //ユーザーの入力情報を受け取る
-      const name = this.name;
-      const email = this.email;
-      const password = this.password;
-      console.log('name : ' + name);
+      //ユーザーの入力情報を受け取ってSignUp
+      const endpoint = "http://localhost:5000/api/v1/auth";
+      const body = {
+        email : this.email,
+        password : this.password,
+      };
 
-      //受け取った入力情報を元にSignUp
-    }
+      const app = this;
+      axios
+        .post("http://localhost:5000/api/v1/auth", body)
+        .then(function(response){
+          console.log(response);
+
+          //何のためにlocalStorageに保存するんだろう...？あまりその意味を分かっていない。 (参照；https://bit.ly/37XB8md)
+          localStorage.setItem("access-token", response.headers["access-token"]);
+          localStorage.setItem("client", response.headers["client"]);
+          localStorage.setItem("uid", response.headers["uid"]);
+
+          alert("SignUp completed !!")
+          app.name = "";
+          app.email = "";
+          app.password = "";
+
+        })
+        .catch(function(error){
+          console.log(error);
+        });
+    },
   },
 }
 </script>
