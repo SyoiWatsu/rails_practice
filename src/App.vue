@@ -14,6 +14,8 @@
         span MatcherClone : 
         router-link.link(:to="{ name: 'SignUp' }") SignUp
         span / 
+        router-link.link(:to="{ name: 'SignIn' }") SignIn
+        span / 
     .main
       router-view
 </template>

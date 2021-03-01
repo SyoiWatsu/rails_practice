@@ -1,10 +1,6 @@
 <template>
   <div>
-    <h1>SignUp</h1>
-    <div>
-      <label for="Name">Name : </label>
-      <input type="text" id="Name" v-model="name">
-    </div>
+    <h1>SignIn</h1>
     <div>
       <label for="Mail">Mail : </label>
       <input type="text" id="Mail" v-model="email">
@@ -13,7 +9,7 @@
       <label for="Password">Password : </label>
       <input type="text" id="Password" v-model="password">
     </div>
-    <button v-on:click="signUp">Sign Up</button>
+    <button v-on:click="signIn">Sign In</button>
   </div>
 </template>
 
@@ -29,7 +25,6 @@ export default {
   },
   data() {
     return {
-      name : "",
       email : "",
       password : "",
     };
@@ -41,13 +36,13 @@ export default {
   mounted() {
   },
   methods: {
-    signUp : function(){
-      console.log("SignUpボタンが押された！");
+    signIn : function(){
+      console.log("SignInボタンが押された！");
       console.log("email : " + this.email);
       console.log("password : " + this.password);
       
-      //ユーザーの入力情報を受け取ってSignUp
-      const endpoint = "http://localhost:5000/api/v1/auth";
+      //ユーザーの入力情報を受け取ってSignIn
+      const endpoint = "http://localhost:5000/api/v1/auth/sign_in";
       const body = {
         email : this.email,
         password : this.password,
@@ -65,8 +60,7 @@ export default {
           localStorage.setItem("client", response.headers["client"]);
           localStorage.setItem("uid", response.headers["uid"]);
 
-          alert("SignUp completed !!")
-          app.name = "";
+          alert("SignIn completed !!")
           app.email = "";
           app.password = "";
 
