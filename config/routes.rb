@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   end
 
   # /api/v1/auth
+
+  post '/api/v1/sign_up', controller: :users, action: :create
   
 
   # The priority is based upon order of creation: first created -> highest priority.
