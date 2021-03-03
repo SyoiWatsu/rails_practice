@@ -16,6 +16,10 @@
         span / 
         router-link.link(:to="{ name: 'SignIn' }") SignIn
         span / 
+        router-link.link(:to="{ name: 'PlanIndex' }") Index
+        span / 
+        router-link.link(:to="{ name: 'NewPlan' }") NewPlan
+        span / 
     .main
       router-view
 </template>

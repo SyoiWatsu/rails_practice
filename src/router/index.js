@@ -7,8 +7,11 @@ import Sample from 'pages/Sample';
 import New from 'pages/New';
 import Index from 'pages/Index';
 
-import SignUp from 'pages/MatcherClone/SignUp'
-import SignIn from 'pages/MatcherClone/SignIn'
+import SignUp from 'pages/MatcherClone/SignUp';
+import SignIn from 'pages/MatcherClone/SignIn';
+import PlanIndex from 'pages/MatcherClone/PlanIndex';
+import NewPlan from 'pages/MatcherClone/NewPlan';
+
 
 //ルーティング先になり得るとこををブチ込んでおく
 const routes = [
@@ -19,6 +22,8 @@ const routes = [
 
   { path: '/matcher-clone/signup', name: 'SignUp', component: SignUp },
   { path: '/matcher-clone/signin', name: 'SignIn', component: SignIn },
+  { path: '/matcher-clone', name: 'PlanIndex', component: PlanIndex },
+  { path: '/matcher-clone/new-plan', name: 'NewPlan', component: NewPlan },
 ]
 
 //VueRouterの使い方調べる必要あり

@@ -64,7 +64,7 @@ export default {
           app.email = "";
           app.password = "";
 
-          //ここにIndexへのリダイレクト処理入れたい
+          app.$router.push({name : "PlanIndex"}) //PlanIndexに画面遷移
 
         })
         .catch(function(error){
