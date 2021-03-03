@@ -15,3 +15,6 @@ gem 'devise_token_auth'
 
 # CORS設定
 gem 'rack-cors'
+
+# binding.pryを使う為
+# gem 'pry-rails'
