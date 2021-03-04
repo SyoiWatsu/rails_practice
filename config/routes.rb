@@ -18,8 +18,9 @@ Rails.application.routes.draw do
   end
   # /api/v1/auth
 
-  post "/api/v1/new", controller: "v1/plans", action: :create
+  post "/api/v1/plans/new", controller: "v1/plans", action: :create
   # 基本的に[app/controllers]直下にある想定で動くみたいなので
   # ネストした場所に当該コントローラーがある場合は場所を教えてあげる必要あり。
-  
+  get "/api/v1/plans/:id", controller: "v1/plans", action: :show
+
 end

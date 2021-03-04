@@ -44,7 +44,7 @@ export default {
       }
 
       //エンドポイントのURL
-      const endpoint = "/api/v1/new";
+      const endpoint = "/api/v1/plans/new";
 
       //Postリクエスト時に渡すbody
       const body = {
