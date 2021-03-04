@@ -4,7 +4,7 @@ class V1::PlansController < ApplicationController
 
   def create
     # ①Vueからjson受け取り
-    json_request = JSON.parse(request.body.read)
+    json_request = JSON.parse(request.body.read) # ←paramsメソッド使うからコレいらんか
 
     # ②jsonパース
     title = params[:title]
@@ -33,6 +33,30 @@ class V1::PlansController < ApplicationController
     else
       render({msg: "failed ..."}, status: 500)
     end
-
   end
+
+
+  def show
+    p params # paramsの中身確認してみる
+
+    plan = Plan.find(params[:id]) # PlanをIDで検索
+
+    # ↓できればココで対象となるレコードがあるかないかで条件分岐したい。
+    # コレでできるかなと思ったけどできないマン
+    if plan
+      obj = {
+        msg: "success !!",
+        plan: {
+          title: plan.title,
+          detail: plan.detail,
+          uesr_id: plan.user_id,
+        },
+      }
+
+      render(json: obj, status: 200)
+    else
+      ender({msg: "failed ..."}, status: 500)
+    end
+  end
+
 end
