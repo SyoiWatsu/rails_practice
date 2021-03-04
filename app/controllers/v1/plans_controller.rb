@@ -39,7 +39,7 @@ class V1::PlansController < ApplicationController
   def show
     p params # paramsの中身確認してみる
 
-    plan = Plan.find(params[:id]) # PlanをIDで検索
+    plan = Plan.find_by(id: params[:id]) # PlanをIDで検索
 
     # ↓できればココで対象となるレコードがあるかないかで条件分岐したい。
     # コレでできるかなと思ったけどできないマン
@@ -55,7 +55,7 @@ class V1::PlansController < ApplicationController
 
       render(json: obj, status: 200)
     else
-      ender({msg: "failed ..."}, status: 500)
+      render(json: {msg: "failed ..."}, status: 422)
     end
   end
 
