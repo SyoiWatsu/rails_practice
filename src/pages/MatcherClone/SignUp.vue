@@ -54,7 +54,7 @@ export default {
         name : this.name
       };
 
-      const app = this;
+      const vm = this;
       axios
         .post(endpoint, body)
         .then(function(response){
@@ -67,11 +67,11 @@ export default {
           localStorage.setItem("uid", response.headers["uid"]);
 
           alert("SignUp completed !!")
-          app.name = "";
-          app.email = "";
-          app.password = "";
+          vm.name = "";
+          vm.email = "";
+          vm.password = "";
 
-          app.$router.push({name : "PlanIndex"}) //PlanIndexに画面遷移
+          vm.$router.push({name : "PlanIndex"}) //PlanIndexに画面遷移
 
         })
         .catch(function(error){

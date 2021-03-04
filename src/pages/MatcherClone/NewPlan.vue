@@ -37,7 +37,34 @@ export default {
   },
   methods: {
     createNewPlan : function(){
-      
+
+      if(this.title === "" || this.detail === 0){
+        alert("未入力欄あり");
+        return;
+      }
+
+      let vm = this;
+      const endpoint = "/api/v1/new";
+      axios.post(endpoint, {
+        title : vm.title,
+        detail : vm.detail,
+      })
+      .then(function(response){ //処理成功
+        console.log(response);
+
+        const msg = "保存に成功しました！" + '\n' + 
+                    "title : " + vm.title + '\n' + 
+                    "detail : " + vm.detail;
+        alert(msg);
+
+        vm.$router.push({name : "PlanIndex"}); //PlanIndexに画面遷移
+      })
+      .catch(function(error){ //処理失敗
+        console.log(error);
+
+        alert("保存に失敗しました...");
+      });
+
     },
   },
 }
