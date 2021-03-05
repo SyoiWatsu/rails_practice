@@ -41,8 +41,7 @@ class V1::PlansController < ApplicationController
 
     plan = Plan.find_by(id: params[:id]) # PlanをIDで検索
 
-    # ↓できればココで対象となるレコードがあるかないかで条件分岐したい。
-    # コレでできるかなと思ったけどできないマン
+    # planの有無で条件分岐
     if plan
       obj = {
         msg: "success !!",
