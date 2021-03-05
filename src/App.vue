@@ -20,6 +20,8 @@
         span / 
         router-link.link(:to="{ name: 'NewPlan' }") NewPlan
         span / 
+        router-link.link(:to="{ name: 'PlanDetail' }") PlanDetail
+        span / 
     .main
       router-view
 </template>

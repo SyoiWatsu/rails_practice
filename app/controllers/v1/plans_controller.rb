@@ -25,7 +25,7 @@ class V1::PlansController < ApplicationController
         new_plan: {
           title: title,
           detail: detail,
-          uesr_id: user_id,
+          user_id: user_id,
         },
       }
 
@@ -48,7 +48,7 @@ class V1::PlansController < ApplicationController
         plan: {
           title: plan.title,
           detail: plan.detail,
-          uesr_id: plan.user_id,
+          user_id: plan.user_id,
         },
       }
 
