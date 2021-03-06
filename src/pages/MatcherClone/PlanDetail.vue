@@ -83,7 +83,7 @@ export default {
         const planData = response.data.plan;
         const title = planData.title;
         const detail = planData.detail;
-        const user_id = planData.user_id;
+        const user_id = planData.user_id ? planData.user_id : "[No Data]";
 
         vm.title = title;
         vm.detail = detail;
