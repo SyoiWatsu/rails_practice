@@ -34,6 +34,7 @@ export default {
   created() {
   },
   mounted() {
+    this.fetchCurrentUser();
   },
   methods: {
     signIn : function(){
@@ -69,6 +70,46 @@ export default {
         })
         .catch(function(error){
           console.log(error);
+        });
+    },
+
+    //現在ログイン中のユーザーを取得
+    fetchCurrentUser : async function(){
+      const endpoint = "/api/current-user";
+
+      //localStorageに保存してある各種ログインデータを取得
+      this.access_token = localStorage.getItem("access-token");
+      this.client = localStorage.getItem("client");
+      this.uid = localStorage.getItem("uid");
+
+      //Postリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : this.access_token,
+        "Client" : this.client,
+        "Uid" : this.uid,
+      };
+
+      const vm = this; //自身のVueインスタンスを変数vmに格納
+
+      //Getリクエスト
+      axios
+        .get(endpoint, {
+          headers : headers,
+          data : {},
+        })
+        .then(function(response){
+          console.log(response);
+          const currentUser = response.data.current_user;
+          const msg = "You have already signed in [" + currentUser.uid + "] !!!" + "\n" + 
+                      "If you want to sign in another account, " + "\n" + 
+                      "don't forget to sign out from current account !!";
+          alert(msg);
+
+          vm.$router.push({name : "SignOut"}); //SignOutに画面遷移
+        })
+        .catch(function(error){
+          // console.log(error);
+          console.log("You are not signed in !!!!");
         });
     },
   },
