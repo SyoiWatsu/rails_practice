@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      plans: [], //APIから受け取ったPlsnの配列データを格納しておく為の変数
+      plansData: [], //APIから受け取ったPlsnの配列データを格納しておく為の変数
     };
   },
   watch: {
@@ -25,15 +25,19 @@ export default {
   created() {
   },
   mounted() {
-    // this.fetchPlans();
+    this.fetchPlansData();
   },
   methods: {
-    async fetchPlans() {
-      const response = await axios.get('/api/index');
-      console.log(response);
-      this.plans = response.data.plans;
+    async fetchPlansData() {
+      const response = await axios.get('/api/v1/plans');
+      this.plansData = response.data.plansData;
+      console.log(this.plansData);
+      console.log("length : " + Object.keys(this.plansData).length);
+      console.log("40 : " + this.plansData["40"][0].id);
 
-      console.log(this.plans);
+      // memo
+      // オブジェクトのv-for　→ https://bit.ly/2Oxfm1O
+      
     },
   },
 }

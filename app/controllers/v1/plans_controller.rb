@@ -55,7 +55,7 @@ class V1::PlansController < ApplicationController
     if plansData
       obj = {
         msg: "success !!",
-        planData: plansData,
+        plansData: plansData,
       }
 
       render(json: obj, status: 200)
