@@ -1,6 +1,16 @@
 class V1::PlansController < ApplicationController
 
-  before_action :authenticate_user!, only: [:create]
+  before_action :authenticate_user!, only: [:create, :get_current_user]
+
+  def get_current_user
+
+    p current_user
+
+    obj = {
+      current_user: current_user,
+    }
+    render(json: obj, status: 200)
+  end
 
   def create
     # ①Vueからjson受け取り
@@ -10,6 +20,8 @@ class V1::PlansController < ApplicationController
     title = params[:title]
     detail = params[:detail]
     user_id = current_user.id
+
+    p "current_user : " + user_id.to_s
 
     # ③受け取った値を元にPlanのインスタンス作成
     new_plan = Plan.new()
@@ -36,6 +48,9 @@ class V1::PlansController < ApplicationController
   end
 
   def index
+
+    plansData = Plan.all.group_by{|plan| plan.user_id}
+
     # plansData = [
     #   {
     #     user_id: 1,

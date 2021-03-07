@@ -9,6 +9,7 @@ import Index from 'pages/Index';
 
 import SignUp from 'pages/MatcherClone/SignUp';
 import SignIn from 'pages/MatcherClone/SignIn';
+import SignOut from 'pages/MatcherClone/SignOut';
 import PlanIndex from 'pages/MatcherClone/PlanIndex';
 import NewPlan from 'pages/MatcherClone/NewPlan';
 import PlanDetail from 'pages/MatcherClone/PlanDetail';
@@ -23,6 +24,7 @@ const routes = [
 
   { path: '/matcher-clone/signup', name: 'SignUp', component: SignUp },
   { path: '/matcher-clone/signin', name: 'SignIn', component: SignIn },
+  { path: '/matcher-clone/signout', name: 'SignOut', component: SignOut },
   { path: '/matcher-clone', name: 'PlanIndex', component: PlanIndex },
   { path: '/matcher-clone/new-plan', name: 'NewPlan', component: NewPlan },
   { path: '/matcher-clone/plans/id', name: 'PlanDetail', component: PlanDetail, props : true },

@@ -16,6 +16,8 @@
         span / 
         router-link.link(:to="{ name: 'SignIn' }") SignIn
         span / 
+        router-link.link(:to="{ name: 'SignOut' }") SignOut
+        span / 
         router-link.link(:to="{ name: 'PlanIndex' }") PlanIndex
         span / 
         router-link.link(:to="{ name: 'NewPlan' }") NewPlan

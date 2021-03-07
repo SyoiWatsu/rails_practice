@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>PlanDetail</h1>
-    User ID を指定：<input type="number" v-model="input_user_id">
+    Plan ID を指定：<input type="number" v-model="input_user_id">
     <button v-on:click="submit">Submit</button>
     <ul>
       <li>Title : {{ title }}</li>
@@ -34,7 +34,7 @@ export default {
   created() {
   },
   mounted() {
-    // this.getPlanDetail();
+    // this.fetchPlanDetail();
   },
   methods: {
 
@@ -45,11 +45,11 @@ export default {
         return;
       }
 
-      this.getPlanDetail();
+      this.fetchPlanDetail();
     },
 
 
-    getPlanDetail : function(){
+    fetchPlanDetail : function(){
 
       //エンドポイントのURL
       const endpoint = "/api/v1/plans/" + this.input_user_id;
