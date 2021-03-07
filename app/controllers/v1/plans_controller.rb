@@ -51,6 +51,18 @@ class V1::PlansController < ApplicationController
 
     plansData = Plan.all.group_by{|plan| plan.user_id}
 
+    # planDataの有無で条件分岐
+    if plansData
+      obj = {
+        msg: "success !!",
+        planData: plansData,
+      }
+
+      render(json: obj, status: 200)
+    else
+      render(json: {msg: "failed ..."}, status: 422)
+    end
+
     # plansData = [
     #   {
     #     user_id: 1,
