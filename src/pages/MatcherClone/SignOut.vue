@@ -84,7 +84,6 @@ export default {
       this.access_token = localStorage.getItem("access-token");
       this.client = localStorage.getItem("client");
       this.uid = localStorage.getItem("uid");
-      console.log("access_token : " + this.access_token);
 
       //Postリクエスト時に渡すheaders
       const headers = {
@@ -93,18 +92,26 @@ export default {
         "Uid" : this.uid,
       };
 
+      const vm = this; //自身のVueインスタンスを変数vmに格納
+
       //Getリクエスト
-      const response = await axios.get(endpoint, {
-        headers : headers,
-        data : {},
-      });
-
-      console.log(response);
-      const currentUser = response.data.current_user;
-      this.currentUser.id = currentUser.id;
-      this.currentUser.uid = currentUser.uid;
-      this.currentUser.name = currentUser.name;
-
+      axios
+        .get(endpoint, {
+          headers : headers,
+          data : {},
+        })
+        .then(function(response){
+          console.log(response);
+          const currentUser = response.data.current_user;
+          vm.currentUser.id = currentUser.id;
+          vm.currentUser.uid = currentUser.uid;
+          vm.currentUser.name = currentUser.name;
+        })
+        .catch(function(error){
+          console.log(error);
+          alert("You are not signed in !!");
+          vm.$router.push({name : "SignIn"}); //SignInに画面遷移
+        });
     },
   },
 }
