@@ -1,7 +1,14 @@
 <template>
   <div>
     <h1>PlanIndex</h1>
-    <p>comming soon ...</p>
+    <div>
+      <div v-for="planData in plansData">
+        <p>▶︎ Plans made by user_id : {{ planData[0].user_id }}</p>
+        <ul>
+          <li v-for="(plan, index) in planData">Plan_{{ index + 1 }} : {{ plan.title }}</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
