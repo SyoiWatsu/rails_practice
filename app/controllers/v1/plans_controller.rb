@@ -12,20 +12,20 @@ class V1::PlansController < ApplicationController
     user_id = current_user.id
 
     # ③受け取った値を元にPlanのインスタンス作成
-    newPlan = Plan.new()
-    newPlan.title = title
-    newPlan.detail = detail
-    newPlan.user_id = user_id
+    new_plan = Plan.new()
+    new_plan.title = title
+    new_plan.detail = detail
+    new_plan.user_id = user_id
 
     # ④保存
-    if newPlan.save
+    if new_plan.save
       
       obj = {
         msg: "success !!",
-        newPlan: {
+        new_plan: {
           title: title,
           detail: detail,
-          uesr_id: user_id,
+          user_id: user_id,
         },
       }
 
@@ -48,7 +48,7 @@ class V1::PlansController < ApplicationController
         plan: {
           title: plan.title,
           detail: plan.detail,
-          uesr_id: plan.user_id,
+          user_id: plan.user_id,
         },
       }
 
