@@ -28,9 +28,6 @@ const routes = [
   { path: '/matcher-clone', name: 'PlanIndex', component: PlanIndex },
   { path: '/matcher-clone/new-plan', name: 'NewPlan', component: NewPlan },
   { path: '/matcher-clone/plans/:id', name: 'PlanDetail', component: PlanDetail, props : true },
-  // path: '/matcher-clone/plans/:id', name: 'PlanDetail', component: PlanDetail, props : true },
-  // ↑ここでいい感じにURLにID埋め込むにはどうしたら良いんだろう...？
-  // これ参考にすればイケる！ →https://bit.ly/3kQJNfG
 ]
 
 //VueRouterの使い方調べる必要あり

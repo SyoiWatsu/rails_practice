@@ -114,6 +114,24 @@ class V1::PlansController < ApplicationController
   end
 
   def search
+    
+    # ここでVueからパラメータ受け取って、それをkeywordに入れる
+    keyword = "大学"
+    search_result =  Plan.where("title like ?","%#{keyword}%")
+    
+    if search_result
+      obj = {
+        msg: "success !!",
+        search_result: search_result,
+      }
+
+      render(json: obj, status: 200)
+    else
+      render(json: {msg: "failed ..."}, status: 422)
+    end
+
+    # ↑これでデータ取得できること確認済み
+    # あとはVueからkeyword受け取ってそれで検索できるように
   end
 
 

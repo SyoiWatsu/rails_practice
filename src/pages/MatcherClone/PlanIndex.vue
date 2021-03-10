@@ -10,7 +10,7 @@
       </div>
     </div>
     <hr>
-    
+
     <div class="memo">
       <開発memo> <br>
       ① バックエンドで特定のキーワードを含む(もしくは完全一致？)のレコードを持ってくる <br>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from 'axios'; //axiosを使う準備
+import axios from "axios"; //axiosを使う準備
 
 //他のファイルでimportされたときに戻り値
 export default {
@@ -53,7 +53,7 @@ export default {
 
     // Planのデータを取得する関数
     async fetchPlansData() {
-      const response = await axios.get('/api/v1/plans');
+      const response = await axios.get("/api/v1/plans");
       this.plansData = response.data.plansData;
       // console.log(this.plansData);
       // console.log("length : " + Object.keys(this.plansData).length);
