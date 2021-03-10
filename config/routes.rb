@@ -24,5 +24,6 @@ Rails.application.routes.draw do
   get "/api/v1/plans/:id", controller: "v1/plans", action: :show
   get "/api/v1/plans", controller: "v1/plans", action: :index
   get "/api/current-user", controller: "v1/plans", action: :get_current_user
-
+  get "/api/v1/plans/search", controller: "v1/plans", action: :search
+  # ↑ "/api/v1/plans/search?keyword=hogehoge" 的な感じにしたい
 end

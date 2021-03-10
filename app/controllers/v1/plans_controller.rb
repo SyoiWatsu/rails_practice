@@ -113,6 +113,9 @@ class V1::PlansController < ApplicationController
 
   end
 
+  def search
+  end
+
 
   def show
     p params # paramsの中身確認してみる
