@@ -1,6 +1,12 @@
 <template>
   <div>
     <h1>PlanIndex</h1>
+    <div class="search">
+      <label for="Search">Search : </label>
+      <input type="text" id="Search" v-model="keyword">
+      <button v-on:click="fetchSearchResults">Go !</button>
+    </div>
+    <hr>
     <div>
       <div v-for="planData in plansData">
         <p>▶︎ Plans made by user_id : {{ planData[0].user_id }}</p>
@@ -13,7 +19,7 @@
 
     <div class="memo">
       <開発memo> <br>
-      ① バックエンドで特定のキーワードを含む(もしくは完全一致？)のレコードを持ってくる <br>
+      ① バックエンドで特定のキーワードを含む(もしくは完全一致？)のレコードを持ってくる ← done<br>
       ② Vueからユーザーの入力をRailsに渡す <br>
       ③ ↑で受け取った値を使ってレコード持ってこれるようにする <br>
       ④ Vueで受け取って表示する
@@ -34,6 +40,7 @@ export default {
   data() {
     return {
       plansData: [], //APIから受け取ったPlsnの配列データを格納しておく為の変数
+      keyword : "",
     };
   },
   watch: {
@@ -44,6 +51,11 @@ export default {
     this.fetchPlansData();
   },
   methods: {
+
+    //Plan検索結果を取得する関数
+    fetchSearchResults :function(){
+      console.log("called fetchSearchResults");
+    },
     
     //Plan詳細を表示する関数 
     showDetail : function(planId){
