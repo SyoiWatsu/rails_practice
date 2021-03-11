@@ -53,7 +53,7 @@ export default {
   methods: {
 
     //Plan検索結果を取得する関数
-    fetchSearchResults :function(){
+    fetchSearchResults : async function(){
       console.log("called fetchSearchResults");
 
       if(this.keyword == ""){
@@ -68,14 +68,10 @@ export default {
         // ココまだ複数条件対応できていない
       };
 
-      axios
-        .get(endpoint, {params : params})
-        .then(function(response){
-          console.log(response);
-        })
-        .catch(function(error){
-          console.log(error);
-        });
+      const responce = await axios.get(endpoint, {params : params});
+      const searchResult = responce.data.search_result;
+      console.log(searchResult);
+      this.plansData = searchResult;
 
       // ココ見つつやる → https://github.com/axios/axios#example
     },
