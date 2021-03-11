@@ -74,6 +74,11 @@ export default {
       this.plansData = searchResult;
 
       // ココ見つつやる → https://github.com/axios/axios#example
+      // 理想はfetchPlanDetailでやってるみたいに
+      // ① VueRouterで画面遷移
+      // ② 遷移先のmountedでRailsAPI呼び出し
+      // みたいな形が良いのかな...？
+      // と、いうことは検索結果表示用の画面をIndexとは別で作らねば....？
     },
     
     //Plan詳細を表示する関数 
