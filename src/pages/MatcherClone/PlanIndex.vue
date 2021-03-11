@@ -55,6 +55,29 @@ export default {
     //Plan検索結果を取得する関数
     fetchSearchResults :function(){
       console.log("called fetchSearchResults");
+
+      if(this.keyword == ""){
+        alert("No keyword entered ...");
+        return;
+      }
+
+      //エンドポイントのURL
+      const endpoint = "/api/v1/plans/search";
+      const params = {
+        keyword : this.keyword,
+        // ココまだ複数条件対応できていない
+      };
+
+      axios
+        .get(endpoint, {params : params})
+        .then(function(response){
+          console.log(response);
+        })
+        .catch(function(error){
+          console.log(error);
+        });
+
+      // ココ見つつやる → https://github.com/axios/axios#example
     },
     
     //Plan詳細を表示する関数 
