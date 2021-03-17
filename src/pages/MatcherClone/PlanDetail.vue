@@ -1,13 +1,14 @@
 <template>
   <div>
     <h1>PlanDetail</h1>
-    Plan ID：<input type="number" v-model="plan_id">
+    Plan ID : <input type="number" v-model="plan_id">
     <button v-on:click="submit">Submit</button>
     <ul>
       <li>Title : {{ title }}</li>
       <li>Detail : {{ detail }}</li>
       <li>User ID : {{ user_id }}</li>
     </ul>
+    <button v-on:click="apply">Apply</button>
   </div>
 </template>
 
@@ -23,10 +24,10 @@ export default {
   },
   data() {
     return {
-      title : "",
-      detail : "",
-      user_id : 0,
-      plan_id : this.$route.params.id,
+      title: "",
+      detail: "",
+      user_id: 0,
+      plan_id: this.$route.params.id,
     };
   },
   watch: {
@@ -38,7 +39,7 @@ export default {
   },
   methods: {
 
-    submit : function(){
+    submit: function(){
 
       if(this.plan_id === 0 || this.plan_id === ""){
         alert("Plan ID が指定されていません！");
@@ -54,8 +55,7 @@ export default {
       this.fetchPlanDetail();
     },
 
-
-    fetchPlanDetail : function(){
+    fetchPlanDetail: function(){
 
       //エンドポイントのURL
       const endpoint = "/api/v1/plans/" + this.plan_id;
@@ -110,6 +110,25 @@ export default {
       });
 
     },
+
+    apply: function() {
+      console.log("called apply !");
+
+      const msg = "Apply this plan ?" + "\n" + 
+                  "--- --- --- --- ---" + "\n" + 
+                  "title : " + this.title + "\n" + 
+                  "detail : " + this.detail + "\n" + 
+                  "user_id : " + this.user_id + "\n" + 
+                  "--- --- --- --- ---" 
+                  ;
+      const result = confirm(msg);
+      if(result == false){ return }
+
+      // ここにApplyの処理を書いていく。
+      // プランへの申し込みができている状態とは
+      // 『visit_applicationテーブルにレコードが格納できた状態』を指す。
+      // → visit_applicationテーブルに対してレコードブチ込む処理をここですればOK？
+    }
   },
 }
 </script>
