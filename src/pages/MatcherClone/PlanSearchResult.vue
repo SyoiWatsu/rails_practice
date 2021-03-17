@@ -16,13 +16,11 @@
       </div>
     </div>
     <hr>
-
     <div class="memo">
       <開発memo> <br>
-      ① バックエンドで特定のキーワードを含む(もしくは完全一致？)のレコードを持ってくる ← done<br>
-      ② Vueからユーザーの入力をRailsに渡す <br>
-      ③ ↑で受け取った値を使ってレコード持ってこれるようにする <br>
-      ④ Vueで受け取って表示する
+      『Index → Detail』への画面遷移はできる <br>
+      『SearchResult → Detail』への画面遷移ができない。<br>
+      なんで？
     </div>
   </div>
 </template>
@@ -103,7 +101,7 @@ export default {
       //これだと [/matcher-clone/plans/matcher-clone/plans/18] こうなる
       // this.$router.push(baseUrl + planId); 
       
-      // これだと [/matcher-clone/plans/] こうなる (Viewも再描画されない？)
+      // これだと [/matcher-clone/plans/] こうなる (Viewも再描画されない)
       this.$router.push(planId);
     },
 
