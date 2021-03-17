@@ -141,7 +141,6 @@ class V1::PlansController < ApplicationController
     end
   end
 
-
   def show
     p params # paramsの中身確認してみる
 
