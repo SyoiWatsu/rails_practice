@@ -54,17 +54,16 @@ export default {
         return;
       }
 
-      const baseUrl = "matcher-clone/plans/";
-      const query = "?search=" + this.keyword;
+      const query = {
+        search: this.keyword,
+      };
 
-      // ここでクエリつきのURLを渡してあげる
-      this.$router.push(baseUrl + query);
+      this.$router.push({name: "PlanSearchResult", query: query});
     },
     
     //Plan詳細を表示する関数 
     showDetail : function(planId){
-      const baseUrl = "matcher-clone/plans/";
-      this.$router.push(baseUrl + planId);
+      this.$router.push({name: "PlanDetail", params: {id: planId}});
     },
 
     // Planのデータを取得する関数

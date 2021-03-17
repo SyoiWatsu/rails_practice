@@ -139,9 +139,6 @@ class V1::PlansController < ApplicationController
     else
       render(json: {msg: "failed ..."}, status: 422)
     end
-
-    # ↑これでデータ取得できること確認済み
-    # あとはVueからkeyword受け取ってそれで検索できるように
   end
 
 

@@ -66,13 +66,6 @@ export default {
       const searchResult = responce.data.search_result;
       console.log(searchResult);
       this.plansData = searchResult;
-
-      // ココ見つつやる → https://github.com/axios/axios#example
-      // 理想はfetchPlanDetailでやってるみたいに
-      // ① VueRouterで画面遷移
-      // ② 遷移先のmountedでRailsAPI呼び出し
-      // みたいな形が良いのかな...？
-      // と、いうことは検索結果表示用の画面をIndexとは別で作らねば....？
     },
 
     //検索結果画面を表示する関数
@@ -84,12 +77,11 @@ export default {
         return;
       }
 
-      const baseUrl = "matcher-clone/plans/";
-      const query = "?search=" + this.keyword;
+      const query = {
+        search: this.keyword,
+      };
 
-      // ここでクエリつきのURLを渡してあげる
-      // this.$router.push(baseUrl + query);
-      this.$router.push(query);
+      this.$router.push({name: "PlanSearchResult", query: query});
     },
     
     //Plan詳細を表示する関数 
@@ -98,11 +90,10 @@ export default {
 
       console.log("planId : " + planId); //クリックしたPlanのIDは取得できてる
 
-      //これだと [/matcher-clone/plans/matcher-clone/plans/18] こうなる
-      // this.$router.push(baseUrl + planId); 
-      
-      // これだと [/matcher-clone/plans/] こうなる (Viewも再描画されない)
-      this.$router.push(planId);
+      const params = {
+        id: planId,
+      };
+      this.$router.push({name: "PlanDetail", params: params});
     },
 
   },
