@@ -60,14 +60,23 @@ class V1::PlansController < ApplicationController
   end
 
   def search
-    
-    # ここでVueからパラメータ受け取って、それをkeywordに入れる
-    p params
 
     keyword = params[:keyword]
     search_result =  Plan
-                       .where("title like ?","%#{keyword}%")
-                       .group_by{|plan| plan.user_id}
+      .where("title like ?","%#{keyword}%")
+      .group_by{|plan| plan.user_id}
+    # ↑whereで絞り込んで返ってきた配列に対して
+    # .group_byでuser_idごとにグルーピングをしている。
+    # .group_byは配列のメソッド 
+    
+    # search_result =  Plan
+    #   .where("title like ?","%#{keyword}%")
+    #   .group(:user_id)
+    # ↑これだとSQL文自体の中でGRUOP_BYされる
+    # →返ってくる値が集計された後の値になるので今回の目的には合致しない。
+
+
+    # memo
     # ココまだ複数条件対応できていない。
     # 配列とかで値もらってこっちでパースしてひとつひとつブチ込む、
     # みたいな形になるかな？
@@ -88,8 +97,6 @@ class V1::PlansController < ApplicationController
   end
 
   def show
-    p params # paramsの中身確認してみる
-
     plan = Plan.find_by(id: params[:id]) # PlanをIDで検索
 
     # planの有無で条件分岐

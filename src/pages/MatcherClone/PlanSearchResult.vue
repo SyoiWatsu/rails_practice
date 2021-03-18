@@ -4,14 +4,14 @@
     <div class="search">
       <label for="Search">Search : </label>
       <input type="text" id="Search" v-model="keyword">
-      <button v-on:click="showSearchResult">Go !</button>
+      <button @click="showSearchResult">Go !</button>
     </div>
     <hr>
     <div>
       <div v-for="planData in plansData">
         <p>▶︎ Plans made by user_id : {{ planData[0].user_id }}</p>
         <ul>
-          <li v-for="(plan, index) in planData" v-on:click="showDetail(plan.id)">Plan_{{ index + 1 }} : {{ plan.title }}</li>
+          <li v-for="(plan, index) in planData" @click="showDetail(plan.id)">Plan_{{ index + 1 }} : {{ plan.title }}</li>
         </ul>
       </div>
     </div>
@@ -47,30 +47,26 @@ export default {
   },
   mounted() {
     this.keyword = this.$route.query.search;
-    this.fetchSearchResults(this.keyword);
+    this.fetchSearchResults();
   },
   methods: {
 
     //Plan検索結果を取得する関数
-    fetchSearchResults : async function(keyword){
-      console.log("called fetchSearchResults");
+    async fetchSearchResults() {
 
       //エンドポイントのURL
       const endpoint = "/api/v1/plans/search";
       const params = {
-        keyword : keyword,
+        keyword : this.keyword,
         // ココまだ複数条件対応できていない
       };
 
       const responce = await axios.get(endpoint, {params : params});
-      const searchResult = responce.data.search_result;
-      console.log(searchResult);
-      this.plansData = searchResult;
+      this.plansData = responce.data.search_result;
     },
 
     //検索結果画面を表示する関数
-    showSearchResult : function(){
-      console.log("called showSearchResult !!");
+    showSearchResult() {
 
       if(this.keyword == ""){
         alert("No keyword entered ...");
@@ -85,11 +81,7 @@ export default {
     },
     
     //Plan詳細を表示する関数 
-    showDetail : function(planId){
-      const baseUrl = "matcher-clone/plans/";
-
-      console.log("planId : " + planId); //クリックしたPlanのIDは取得できてる
-
+    showDetail(planId) {
       const params = {
         id: planId,
       };
@@ -99,7 +91,6 @@ export default {
   },
 
   beforeRouteUpdate (to, from, next) {
-    console.log("called beforeRouterUpdate !!!!");
     this.fetchSearchResults(this.keyword); //データを再取得
     next();
   }
