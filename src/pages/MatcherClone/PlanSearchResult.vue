@@ -15,13 +15,6 @@
         </ul>
       </div>
     </div>
-    <hr>
-    <div class="memo">
-      <開発memo> <br>
-      『Index → Detail』への画面遷移はできる <br>
-      『SearchResult → Detail』への画面遷移ができない。<br>
-      なんで？
-    </div>
   </div>
 </template>
 
