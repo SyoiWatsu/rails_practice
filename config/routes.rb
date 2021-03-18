@@ -22,5 +22,7 @@ Rails.application.routes.draw do
   # 基本的に[app/controllers]直下にある想定で動くみたいなので
   # ネストした場所に当該コントローラーがある場合は場所を教えてあげる必要あり。
   get "/api/v1/plans/:id", controller: "v1/plans", action: :show
+  get "/api/v1/plans", controller: "v1/plans", action: :index
+  get "/api/current-user", controller: "v1/plans", action: :get_current_user
 
 end

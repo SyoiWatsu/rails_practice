@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>PlanDetail</h1>
-    User ID を指定：<input type="number" v-model="input_user_id">
+    Plan ID：<input type="number" v-model="plan_id">
     <button v-on:click="submit">Submit</button>
     <ul>
       <li>Title : {{ title }}</li>
@@ -26,7 +26,7 @@ export default {
       title : "",
       detail : "",
       user_id : 0,
-      input_user_id : 0,
+      plan_id : this.$route.params.id,
     };
   },
   watch: {
@@ -34,31 +34,37 @@ export default {
   created() {
   },
   mounted() {
-    // this.getPlanDetail();
+    this.fetchPlanDetail();
   },
   methods: {
 
     submit : function(){
 
-      if(this.input_user_id === 0 || this.input_user_id === ""){
-        alert("User ID が指定されていません！");
+      if(this.plan_id === 0 || this.plan_id === ""){
+        alert("Plan ID が指定されていません！");
         return;
       }
 
-      this.getPlanDetail();
+      const baseUrl = "matcher-clone/plans/";
+      this.$router.push(this.plan_id);
+      // this.$router.push(baseUrl +  this.plan_id); 
+      // ↑ なんでこっちじゃないんだろう？ (なぜかURLの前半部分が重なる)
+      // PlanIndexの方ではコッチの書き方してるのに。
+
+
+      this.fetchPlanDetail();
     },
 
 
-    getPlanDetail : function(){
+    fetchPlanDetail : function(){
 
       //エンドポイントのURL
-      const endpoint = "/api/v1/plans/" + this.input_user_id;
+      const endpoint = "/api/v1/plans/" + this.plan_id;
 
       //localStorageに保存してある各種ログインデータを取得
       const access_token = localStorage.getItem("access-token");
       const client = localStorage.getItem("client");
       const uid = localStorage.getItem("uid");
-      console.log("access_token : " + access_token);
 
       //Postリクエスト時に渡すheaders
       const headers = {
@@ -81,21 +87,18 @@ export default {
       .then(function(response){ //処理成功
         console.log(response);
         const planData = response.data.plan;
-        const title = planData.title;
-        const detail = planData.detail;
-        const user_id = planData.user_id;
+        console.log(planData);
 
-        vm.title = title;
-        vm.detail = detail;
-        vm.user_id = user_id;
+        vm.title = planData.title;
+        vm.detail = planData.detail;
+        vm.user_id = planData.user_id;
 
         const msg = "取得成功！" + "\n" + 
-                    "title : " + title + "\n" + 
-                    "detail : " + detail + "\n" + 
-                    "user_id : " + user_id;
+                    "title : " + vm.title + "\n" + 
+                    "detail : " + vm.detail + "\n" + 
+                    "user_id : " + vm.user_id;
 
-        alert(msg);
-
+        // alert(msg);
       })
       .catch(function(error){ //処理失敗
         console.log(error);

@@ -1,6 +1,13 @@
 <template>
   <div>
     <h1>NewPlan</h1>
+    <p>Current User</p>
+    <ul>
+      <li>ID : {{ currentUser.id }}</li>
+      <li>Uid : {{ currentUser.uid }}</li>
+      <li>Name : {{ currentUser.name }}</li>
+    </ul>
+    <hr>
     <div>
       <label for="Title">PlanTitle : </label>
       <input type="text" id="Title" v-model="title">
@@ -27,6 +34,11 @@ export default {
     return {
       title : "",
       detail : "",
+      currentUser : {
+        id : 0,
+        uid : "",
+        name : "",
+      },
     };
   },
   watch: {
@@ -34,6 +46,7 @@ export default {
   created() {
   },
   mounted() {
+    this.fetchCurrentUser();
   },
   methods: {
     createNewPlan : function(){
@@ -92,6 +105,37 @@ export default {
 
         alert("保存に失敗しました...");
       });
+
+    },
+
+    //現在ログイン中のユーザーを取得
+    fetchCurrentUser : async function(){
+      const endpoint = "/api/current-user";
+
+      //localStorageに保存してある各種ログインデータを取得
+      const access_token = localStorage.getItem("access-token");
+      const client = localStorage.getItem("client");
+      const uid = localStorage.getItem("uid");
+      console.log("access_token : " + access_token);
+
+      //Postリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : access_token,
+        "Client" : client,
+        "Uid" : uid,
+      };
+
+      //Getリクエスト
+      const response = await axios.get(endpoint, {
+        headers : headers,
+        data : {},
+      });
+
+      console.log(response);
+      const currentUser = response.data.current_user;
+      this.currentUser.id = currentUser.id;
+      this.currentUser.uid = currentUser.uid;
+      this.currentUser.name = currentUser.name;
 
     },
   },
