@@ -113,6 +113,34 @@ class V1::PlansController < ApplicationController
 
   end
 
+  def search
+    
+    # ここでVueからパラメータ受け取って、それをkeywordに入れる
+    p params
+
+    keyword = params[:keyword]
+    search_result =  Plan
+                       .where("title like ?","%#{keyword}%")
+                       .group_by{|plan| plan.user_id}
+    # ココまだ複数条件対応できていない。
+    # 配列とかで値もらってこっちでパースしてひとつひとつブチ込む、
+    # みたいな形になるかな？
+ 
+    # 最終的にはココ参考に → https://bit.ly/3bAZHYC
+    # 現状のMatcherのURLもこんな感じになってる。
+    
+    if search_result
+      obj = {
+        msg: "success !!",
+        search_result: search_result,
+      }
+
+      render(json: obj, status: 200)
+    else
+      render(json: {msg: "failed ..."}, status: 422)
+    end
+  end
+
 
   def show
     p params # paramsの中身確認してみる

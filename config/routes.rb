@@ -21,8 +21,15 @@ Rails.application.routes.draw do
   post "/api/v1/plans/new", controller: "v1/plans", action: :create
   # 基本的に[app/controllers]直下にある想定で動くみたいなので
   # ネストした場所に当該コントローラーがある場合は場所を教えてあげる必要あり。
+  get "/api/v1/plans/search", controller: "v1/plans", action: :search
   get "/api/v1/plans/:id", controller: "v1/plans", action: :show
   get "/api/v1/plans", controller: "v1/plans", action: :index
   get "/api/current-user", controller: "v1/plans", action: :get_current_user
+  # ↑ "/api/v1/plans/search?keyword=hogehoge" 的な感じにしたい
+  # ↑これはVue側の話でバックエンドの話ではないか。
 
+  # なんか末尾の"search"がidとして認識されてしまっているっぽい...？
+  # どうすれば良いんだろう...？
+  # → まさかと思ってルーティングの順番入れ替えたらイケた。
+  # もっとイケてる対応策ないのかな？
 end

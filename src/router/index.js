@@ -11,6 +11,7 @@ import SignUp from 'pages/MatcherClone/SignUp';
 import SignIn from 'pages/MatcherClone/SignIn';
 import SignOut from 'pages/MatcherClone/SignOut';
 import PlanIndex from 'pages/MatcherClone/PlanIndex';
+import PlanSearchResult from 'pages/MatcherClone/PlanSearchResult';
 import NewPlan from 'pages/MatcherClone/NewPlan';
 import PlanDetail from 'pages/MatcherClone/PlanDetail';
 
@@ -26,11 +27,9 @@ const routes = [
   { path: '/matcher-clone/signin', name: 'SignIn', component: SignIn },
   { path: '/matcher-clone/signout', name: 'SignOut', component: SignOut },
   { path: '/matcher-clone', name: 'PlanIndex', component: PlanIndex },
+  { path: '/matcher-clone/plans', name: 'PlanSearchResult', component: PlanSearchResult },
   { path: '/matcher-clone/new-plan', name: 'NewPlan', component: NewPlan },
   { path: '/matcher-clone/plans/:id', name: 'PlanDetail', component: PlanDetail, props : true },
-  // path: '/matcher-clone/plans/:id', name: 'PlanDetail', component: PlanDetail, props : true },
-  // ↑ここでいい感じにURLにID埋め込むにはどうしたら良いんだろう...？
-  // これ参考にすればイケる！ →https://bit.ly/3kQJNfG
 ]
 
 //VueRouterの使い方調べる必要あり

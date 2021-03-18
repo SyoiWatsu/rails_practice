@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>PlanIndex</h1>
+    <h1>PlanSearchResult</h1>
     <div class="search">
       <label for="Search">Search : </label>
       <input type="text" id="Search" v-model="keyword">
@@ -16,7 +16,12 @@
       </div>
     </div>
     <hr>
-
+    <div class="memo">
+      <開発memo> <br>
+      『Index → Detail』への画面遷移はできる <br>
+      『SearchResult → Detail』への画面遷移ができない。<br>
+      なんで？
+    </div>
   </div>
 </template>
 
@@ -41,9 +46,27 @@ export default {
   created() {
   },
   mounted() {
-    this.fetchPlansData();
+    this.keyword = this.$route.query.search;
+    this.fetchSearchResults(this.keyword);
   },
   methods: {
+
+    //Plan検索結果を取得する関数
+    fetchSearchResults : async function(keyword){
+      console.log("called fetchSearchResults");
+
+      //エンドポイントのURL
+      const endpoint = "/api/v1/plans/search";
+      const params = {
+        keyword : keyword,
+        // ココまだ複数条件対応できていない
+      };
+
+      const responce = await axios.get(endpoint, {params : params});
+      const searchResult = responce.data.search_result;
+      console.log(searchResult);
+      this.plansData = searchResult;
+    },
 
     //検索結果画面を表示する関数
     showSearchResult : function(){
@@ -63,18 +86,23 @@ export default {
     
     //Plan詳細を表示する関数 
     showDetail : function(planId){
-      this.$router.push({name: "PlanDetail", params: {id: planId}});
+      const baseUrl = "matcher-clone/plans/";
+
+      console.log("planId : " + planId); //クリックしたPlanのIDは取得できてる
+
+      const params = {
+        id: planId,
+      };
+      this.$router.push({name: "PlanDetail", params: params});
     },
 
-    // Planのデータを取得する関数
-    async fetchPlansData() {
-      const response = await axios.get("/api/v1/plans");
-      this.plansData = response.data.plansData;
-      // console.log(this.plansData);
-      // console.log("length : " + Object.keys(this.plansData).length);
-      // console.log("40 : " + this.plansData["40"][0].id);
-    },
   },
+
+  beforeRouteUpdate (to, from, next) {
+    console.log("called beforeRouterUpdate !!!!");
+    this.fetchSearchResults(this.keyword); //データを再取得
+    next();
+  }
 }
 </script>
 

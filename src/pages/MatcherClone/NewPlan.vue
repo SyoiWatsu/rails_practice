@@ -52,7 +52,7 @@ export default {
     createNewPlan : function(){
 
       if(this.title === "" || this.detail === ""){
-        alert("未入力欄あり");
+        alert("There is a blank field.");
         return;
       }
 

@@ -46,12 +46,11 @@ export default {
       }
 
       const baseUrl = "matcher-clone/plans/";
-      this.$router.push(this.plan_id);
-      // this.$router.push(baseUrl +  this.plan_id); 
-      // ↑ なんでこっちじゃないんだろう？ (なぜかURLの前半部分が重なる)
-      // PlanIndexの方ではコッチの書き方してるのに。
-
-
+      const params ={
+        id: this.plan_id
+      };
+      this.$router.push({name: "PlanDetail", params: params});
+      
       this.fetchPlanDetail();
     },
 
