@@ -54,6 +54,8 @@ export default {
         // ココまだ複数条件対応できていない
       };
 
+      console.log("here");
+
       const responce = await axios.get(endpoint, {params : params});
       this.plansData = responce.data.search_result;
     },

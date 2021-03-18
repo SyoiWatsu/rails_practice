@@ -1,12 +1,12 @@
 <template>
   <div>
     <h1>PlanDetail</h1>
-    Plan ID : <input type="number" v-model="planId">
+    Plan ID : <input type="number" v-model="plan.id">
     <button v-on:click="submit">Submit</button>
     <ul>
-      <li>Title : {{ title }}</li>
-      <li>Detail : {{ detail }}</li>
-      <li>User ID : {{ userId }}</li>
+      <li>Title : {{ plan.title }}</li>
+      <li>Detail : {{ plan.detail }}</li>
+      <li>User ID : {{ plan.userId }}</li>
     </ul>
     <button v-on:click="apply">Apply</button>
   </div>
@@ -24,10 +24,13 @@ export default {
   },
   data() {
     return {
-      title: "",
-      detail: "",
-      userId: 0,
-      planId: this.$route.params.id,
+      plan: {
+        id: this.$route.params.id,
+        title: "",
+        detail: "",
+        userId: 0, //プラン作成者のuser_id
+      },
+      currentUserId: 0, //現在ログイン中のuser_id
     };
   },
   watch: {
@@ -36,18 +39,19 @@ export default {
   },
   mounted() {
     this.fetchPlanDetail();
+    this.fetchCurrentUser();
   },
   methods: {
 
     submit() {
 
-      if(this.planId === 0 || this.planId === ""){
+      if(this.plan.id === 0 || this.plan.id === ""){
         alert("Plan ID が指定されていません！");
         return;
       }
 
       const params ={
-        id: this.planId
+        id: this.plan.id,
       };
       this.$router.push({name: "PlanDetail", params: params});
       
@@ -57,7 +61,7 @@ export default {
     async fetchPlanDetail() {
 
       //エンドポイントのURL
-      const endpoint = "/api/v1/plans/" + this.planId;
+      const endpoint = "/api/v1/plans/" + this.plan.id;
 
       //localStorageに保存してある各種ログインデータを取得
       const access_token = localStorage.getItem("access-token");
@@ -85,33 +89,90 @@ export default {
         console.log(error);
         alert("取得に失敗しました...");
 
-        vm.title = "[No Data]";
-        vm.detail = "[No Data]";
-        vm.userId = "[No Data]";
+        vm.plan.title = "[No Data]";
+        vm.plan.detail = "[No Data]";
+        vm.plan.userId = "[No Data]";
       });
 
       const plan = response.data.plan;
-      this.title = plan.title;
-      this.detail = plan.detail;
-      this.userId = plan.userId;
+      this.plan.title = plan.title;
+      this.plan.detail = plan.detail;
+      this.plan.userId = plan.user_id;
     },
 
-    apply() {
+    async apply() {
       const msg = "Apply this plan ?" + "\n" + 
                   "--- --- --- --- ---" + "\n" + 
-                  "title : " + this.title + "\n" + 
-                  "detail : " + this.detail + "\n" + 
-                  "userId : " + this.userId + "\n" + 
+                  "title : " + this.plan.title + "\n" + 
+                  "detail : " + this.plan.detail + "\n" + 
+                  "userId : " + this.plan.userId + "\n" + 
                   "--- --- --- --- ---" 
                   ;
       const result = confirm(msg);
       if(result == false){ return }
 
-      // ここにApplyの処理を書いていく。
-      // プランへの申し込みができている状態とは
-      // 『visit_applicationテーブルにレコードが格納できた状態』を指す。
-      // → visit_applicationテーブルに対してレコードブチ込む処理をここですればOK？
-    }
+      //エンドポイントのURL
+      const endpoint = "/api/v1/visit-application/new";
+
+      //Postリクエスト時に渡すbody
+      const body = {
+        authorizer_id: this.plan.userId, //被申込者のuser_id
+        plan_id: this.plan.id, //申し込んだPlanのid
+        status: "waiting",
+      };
+
+      //localStorageに保存してある各種ログインデータを取得
+      const access_token = localStorage.getItem("access-token");
+      const client = localStorage.getItem("client");
+      const uid = localStorage.getItem("uid");
+
+      //Postリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : access_token,
+        "Client" : client,
+        "Uid" : uid,
+      };
+      
+      const response = await axios.post(endpoint, body, {
+        headers : headers,
+      })
+      .catch(function(error){
+        console.log(error);
+        alert("申し込みに失敗しました...");
+      });
+
+      console.log(response);
+
+      // Vue側のリクエストの準備はできたので、あとはバックエンド側のみ
+    },
+
+    //現在ログイン中のユーザーを取得
+    fetchCurrentUser : async function(){
+      const endpoint = "/api/current-user";
+
+      //localStorageに保存してある各種ログインデータを取得
+      const access_token = localStorage.getItem("access-token");
+      const client = localStorage.getItem("client");
+      const uid = localStorage.getItem("uid");
+      console.log("access_token : " + access_token);
+
+      //Postリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : access_token,
+        "Client" : client,
+        "Uid" : uid,
+      };
+
+      //Getリクエスト
+      const response = await axios.get(endpoint, {
+        headers : headers,
+        data : {},
+      });
+
+      console.log(response);
+      this.currentUserId = response.data.current_user.id;
+      console.log("this.currentUserId : " + this.currentUserId);
+    },
   },
 }
 </script>
