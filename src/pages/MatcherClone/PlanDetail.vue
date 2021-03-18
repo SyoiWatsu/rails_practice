@@ -1,12 +1,12 @@
 <template>
   <div>
     <h1>PlanDetail</h1>
-    Plan ID : <input type="number" v-model="plan_id">
+    Plan ID : <input type="number" v-model="planId">
     <button v-on:click="submit">Submit</button>
     <ul>
       <li>Title : {{ title }}</li>
       <li>Detail : {{ detail }}</li>
-      <li>User ID : {{ user_id }}</li>
+      <li>User ID : {{ userId }}</li>
     </ul>
     <button v-on:click="apply">Apply</button>
   </div>
@@ -26,8 +26,8 @@ export default {
     return {
       title: "",
       detail: "",
-      user_id: 0,
-      plan_id: this.$route.params.id,
+      userId: 0,
+      planId: this.$route.params.id,
     };
   },
   watch: {
@@ -39,26 +39,25 @@ export default {
   },
   methods: {
 
-    submit: function(){
+    submit() {
 
-      if(this.plan_id === 0 || this.plan_id === ""){
+      if(this.planId === 0 || this.planId === ""){
         alert("Plan ID が指定されていません！");
         return;
       }
 
-      const baseUrl = "matcher-clone/plans/";
       const params ={
-        id: this.plan_id
+        id: this.planId
       };
       this.$router.push({name: "PlanDetail", params: params});
       
       this.fetchPlanDetail();
     },
 
-    fetchPlanDetail: function(){
+    async fetchPlanDetail() {
 
       //エンドポイントのURL
-      const endpoint = "/api/v1/plans/" + this.plan_id;
+      const endpoint = "/api/v1/plans/" + this.planId;
 
       //localStorageに保存してある各種ログインデータを取得
       const access_token = localStorage.getItem("access-token");
@@ -78,47 +77,31 @@ export default {
       //自身のvueインスタンスを変数vmに格納しておく
       let vm = this;
 
-      //Getリクエスト
-      axios.get(endpoint, {
+      const response = await axios.get(endpoint, {
         headers : headers,
         data : {},
       })
-      .then(function(response){ //処理成功
-        console.log(response);
-        const planData = response.data.plan;
-        console.log(planData);
-
-        vm.title = planData.title;
-        vm.detail = planData.detail;
-        vm.user_id = planData.user_id;
-
-        const msg = "取得成功！" + "\n" + 
-                    "title : " + vm.title + "\n" + 
-                    "detail : " + vm.detail + "\n" + 
-                    "user_id : " + vm.user_id;
-
-        // alert(msg);
-      })
-      .catch(function(error){ //処理失敗
+      .catch(function(error){
         console.log(error);
-
         alert("取得に失敗しました...");
 
         vm.title = "[No Data]";
         vm.detail = "[No Data]";
-        vm.user_id = "[No Data]";
+        vm.userId = "[No Data]";
       });
 
+      const plan = response.data.plan;
+      this.title = plan.title;
+      this.detail = plan.detail;
+      this.userId = plan.userId;
     },
 
-    apply: function() {
-      console.log("called apply !");
-
+    apply() {
       const msg = "Apply this plan ?" + "\n" + 
                   "--- --- --- --- ---" + "\n" + 
                   "title : " + this.title + "\n" + 
                   "detail : " + this.detail + "\n" + 
-                  "user_id : " + this.user_id + "\n" + 
+                  "userId : " + this.userId + "\n" + 
                   "--- --- --- --- ---" 
                   ;
       const result = confirm(msg);

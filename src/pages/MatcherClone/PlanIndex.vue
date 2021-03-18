@@ -8,10 +8,10 @@
     </div>
     <hr>
     <div>
-      <div v-for="planData in plansData">
-        <p>▶︎ Plans made by user_id : {{ planData[0].user_id }}</p>
+      <div v-for="plans in groupedPlans">
+        <p>▶︎ Plans made by user_id : {{ plans[0].user_id }}</p>
         <ul>
-          <li v-for="(plan, index) in planData" v-on:click="showDetail(plan.id)">Plan_{{ index + 1 }} : {{ plan.title }}</li>
+          <li v-for="(plan, index) in plans" v-on:click="showDetail(plan.id)">Plan_{{ index + 1 }} : {{ plan.title }}</li>
         </ul>
       </div>
     </div>
@@ -32,7 +32,7 @@ export default {
   },
   data() {
     return {
-      plansData: [], //APIから受け取ったPlsnの配列データを格納しておく為の変数
+      groupedPlans: [], //APIから受け取ったPlanの配列データを格納しておく為の変数
       keyword : "",
     };
   },
@@ -46,8 +46,7 @@ export default {
   methods: {
 
     //検索結果画面を表示する関数
-    showSearchResult : function(){
-      console.log("called showSearchResult !!");
+    showSearchResult() {
 
       if(this.keyword == ""){
         alert("No keyword entered ...");
@@ -62,17 +61,15 @@ export default {
     },
     
     //Plan詳細を表示する関数 
-    showDetail : function(planId){
+    showDetail(planId) {
       this.$router.push({name: "PlanDetail", params: {id: planId}});
     },
 
     // Planのデータを取得する関数
     async fetchPlansData() {
-      const response = await axios.get("/api/v1/plans");
-      this.plansData = response.data.plansData;
-      // console.log(this.plansData);
-      // console.log("length : " + Object.keys(this.plansData).length);
-      // console.log("40 : " + this.plansData["40"][0].id);
+      const endpoint = "/api/v1/plans";
+      const response = await axios.get(endpoint);
+      this.groupedPlans = response.data.groupedPlans;
     },
   },
 }

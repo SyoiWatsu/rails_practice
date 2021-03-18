@@ -28,7 +28,7 @@ export default {
         uid : "",
         name : "",
       },
-      access_token : "",
+      accessToken : "",
       client : "",
       uid : "",
     };
@@ -41,77 +41,71 @@ export default {
     this.fetchCurrentUser();
   },
   methods: {
-    signOut : function(){
-      console.log("SignOutボタンが押された！");
+    async signOut() {
+
       const result = confirm("SignOut from [" + this.uid + "] .\n\nOK?");
       if(result != true){ return }
       
       //現在ログイン中のユーザーからSignOut
       const endpoint = "http://localhost:5000/api/v1/auth/sign_out";
+
       //リクエスト時に渡すheaders
       const headers = {
-        "Access-Token" : this.access_token,
+        "Access-Token" : this.accessToken,
         "Client" : this.client,
         "Uid" : this.uid,
       };
 
-      const vm = this; //自身のVueインスタンスを変数vmに格納
-      axios
+      const response = await axios
         .delete(endpoint, {
           headers : headers,
-        })
-        .then(function(response){
-          console.log(response);
-
-          localStorage.removeItem("access-token");
-          localStorage.removeItem("client");
-          localStorage.removeItem("uid");
-          
-          alert("SignOut from [" + vm.uid + "] completed !!");
-
-          vm.$router.push({name : "SignIn"}); //SignInに画面遷移
         })
         .catch(function(error){
           console.log(error);
         });
+
+      localStorage.removeItem("access-token");
+      localStorage.removeItem("client");
+      localStorage.removeItem("uid");
+      
+      alert("SignOut from [" + this.uid + "] completed !!");
+
+      this.$router.push({name : "SignIn"}); //SignInに画面遷移
     },
 
     //現在ログイン中のユーザーを取得
-    fetchCurrentUser : async function(){
+    async fetchCurrentUser() {
       const endpoint = "/api/current-user";
 
       //localStorageに保存してある各種ログインデータを取得
-      this.access_token = localStorage.getItem("access-token");
+      this.accessToken = localStorage.getItem("access-token");
       this.client = localStorage.getItem("client");
       this.uid = localStorage.getItem("uid");
 
       //Postリクエスト時に渡すheaders
       const headers = {
-        "Access-Token" : this.access_token,
+        "Access-Token" : this.accessToken,
         "Client" : this.client,
         "Uid" : this.uid,
       };
 
       const vm = this; //自身のVueインスタンスを変数vmに格納
 
-      //Getリクエスト
-      axios
+      const response = await axios
         .get(endpoint, {
           headers : headers,
           data : {},
-        })
-        .then(function(response){
-          console.log(response);
-          const currentUser = response.data.current_user;
-          vm.currentUser.id = currentUser.id;
-          vm.currentUser.uid = currentUser.uid;
-          vm.currentUser.name = currentUser.name;
         })
         .catch(function(error){
           console.log(error);
           alert("You are not signed in !!");
           vm.$router.push({name : "SignIn"}); //SignInに画面遷移
         });
+
+      const currentUser = response.data.current_user;
+      this.currentUser.id = currentUser.id;
+      this.currentUser.uid = currentUser.uid;
+      this.currentUser.name = currentUser.name;
     },
   },
 }
