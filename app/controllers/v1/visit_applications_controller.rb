@@ -3,7 +3,6 @@ class V1::VisitApplicationsController < ApplicationController
   before_action :authenticate_user!, only: [:create]
 
   def create
-    p "here!!!!!!!!!!!"
 
     # ①Vueからjson受け取る & データ準備
     authorizer_id = params[:authorizer_id] #被申込者のuser_id
