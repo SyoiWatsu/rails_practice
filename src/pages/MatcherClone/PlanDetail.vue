@@ -141,7 +141,13 @@ export default {
         alert("申し込みに失敗しました...");
       });
 
-      console.log(response);
+      if(response.status == 204){
+        const msg = "you have already applied, " + "\n" +
+                    "so you cannot apply this plan.";
+        alert(msg);
+      }
+
+      console.log(response.status);
 
       // Vue側のリクエストの準備はできたので、あとはバックエンド側のみ
     },
