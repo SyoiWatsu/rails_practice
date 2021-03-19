@@ -1,6 +1,6 @@
 class V1::VisitApplicationsController < ApplicationController
 
-  before_action :authenticate_user!, only: [:create]
+  before_action :authenticate_user!, only: [:create, :get_notifications]
 
   def create
 
@@ -43,6 +43,25 @@ class V1::VisitApplicationsController < ApplicationController
       else
         render({msg: "failed ..."}, status: 500)
       end
+    end
+  end
+
+  def get_notifications
+
+    # 表示対象となるauthorizer_idを指定 (現在ログイン中のユーザー)
+    authorizer_id = current_user.id
+
+    notificatoins = VisitApplication.where(authorizer_id: authorizer_id)
+
+    if notificatoins.present?
+      obj = {
+        msg: "success !!",
+        notificatoins: notificatoins,
+      }
+
+      render(json: obj, status: 200)
+    else
+      render({msg: "failed ..."}, status: 500)
     end
   end
 end

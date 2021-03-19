@@ -8,6 +8,12 @@
       <li>Name : {{ currentUser.name }}</li>
     </ul>
     <hr>
+    <ul>
+      <div v-if="notifications.length == 0">[No notifications ...]</div>
+      <li v-for="(notification, index) in notifications">
+        【{{ index }}】 [User ID : {{ notification.applicant_id }}] さんから [Plan ID : {{ notification.plan_id }}] に対して申し込みがありました。
+      </li>
+    </ul>
     <hr>
     <div class="memo">
       ・自分が申請を出したプランが承認されたとき <br>
@@ -29,6 +35,7 @@ export default {
   },
   data() {
     return {
+      notifications: [],
       currentUser : {
         id : 0,
         uid : "",
@@ -45,6 +52,7 @@ export default {
   },
   mounted() {
     this.fetchCurrentUser();
+    this.getNotifications();
   },
   methods: {
 
@@ -82,6 +90,35 @@ export default {
       this.currentUser.uid = currentUser.uid;
       this.currentUser.name = currentUser.name;
     },
+
+    async getNotifications() {
+      const endpoint = "api/v1/notifications";
+
+      //Getリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : this.accessToken,
+        "Client" : this.client,
+        "Uid" : this.uid,
+      };
+
+      const response = await axios
+        .get(endpoint, {
+          headers : headers,
+          data : {},
+        })
+        .catch(function(error){
+          console.log(error);
+          alert("faild to get notification ...");
+        });
+
+      console.log(response.data.notificatoins);
+      this.notifications = response.data.notificatoins;
+
+      // PlanIDで表示することはできた。
+      // 
+    }
+
+    
   },
 }
 </script>

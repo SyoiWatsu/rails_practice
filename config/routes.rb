@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get "/api/v1/plans/:id", controller: "v1/plans", action: :show
   get "/api/v1/plans", controller: "v1/plans", action: :index
   post "/api/v1/visit-application/new", controller: "v1/visit_applications", action: :create
+  get "api/v1/notifications", controller: "v1/visit_applications", action: :get_notifications
 
   # なんか末尾の"search"がidとして認識されてしまっているっぽい...？
   # どうすれば良いんだろう...？

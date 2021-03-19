@@ -132,7 +132,7 @@ export default {
         "Client" : client,
         "Uid" : uid,
       };
-      
+
       const response = await axios.post(endpoint, body, {
         headers : headers,
       })
