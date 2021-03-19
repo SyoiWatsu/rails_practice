@@ -148,8 +148,6 @@ export default {
       }
 
       console.log(response.status);
-
-      // Vue側のリクエストの準備はできたので、あとはバックエンド側のみ
     },
 
     //現在ログイン中のユーザーを取得

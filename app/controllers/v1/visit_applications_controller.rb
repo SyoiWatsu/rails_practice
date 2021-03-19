@@ -11,7 +11,7 @@ class V1::VisitApplicationsController < ApplicationController
     applicant_id = current_user.id #プラン申込者のuser_id 
     status = "wating"
 
-    # 既に申込済みだったらハジく
+    # 既に申込済みかどうかを確認
     have_already_applied = VisitApplication.find_by(plan_id: plan_id, applicant_id: applicant_id)
 
     p have_already_applied.present?
