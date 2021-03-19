@@ -19,5 +19,11 @@ class V1::VisitApplicationsController < ApplicationController
 
     # ③保存
 
+
+    
+    # memo
+    # ①VisitApplicationテーブルの"user_id"カラム名を"applicant_id"に変更
+    # ②VisitApplicationテーブルに"authorizer_id"カラムを追加
+
   end
 end
