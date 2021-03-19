@@ -14,6 +14,8 @@ import PlanIndex from 'pages/MatcherClone/PlanIndex';
 import PlanSearchResult from 'pages/MatcherClone/PlanSearchResult';
 import NewPlan from 'pages/MatcherClone/NewPlan';
 import PlanDetail from 'pages/MatcherClone/PlanDetail';
+import Notification from 'pages/MatcherClone/Notification';
+
 
 
 //ルーティング先になり得るとこををブチ込んでおく
@@ -30,6 +32,8 @@ const routes = [
   { path: '/matcher-clone/plans', name: 'PlanSearchResult', component: PlanSearchResult },
   { path: '/matcher-clone/new-plan', name: 'NewPlan', component: NewPlan },
   { path: '/matcher-clone/plans/:id', name: 'PlanDetail', component: PlanDetail, props : true },
+  { path: '/matcher-clone/nitification', name: 'Notification', component: Notification},
+
 ]
 
 //VueRouterの使い方調べる必要あり

@@ -158,7 +158,6 @@ export default {
       const access_token = localStorage.getItem("access-token");
       const client = localStorage.getItem("client");
       const uid = localStorage.getItem("uid");
-      console.log("access_token : " + access_token);
 
       //Postリクエスト時に渡すheaders
       const headers = {
@@ -173,9 +172,7 @@ export default {
         data : {},
       });
 
-      console.log(response);
       this.currentUserId = response.data.current_user.id;
-      console.log("this.currentUserId : " + this.currentUserId);
     },
   },
 }
