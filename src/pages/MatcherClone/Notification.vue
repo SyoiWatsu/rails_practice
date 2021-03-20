@@ -8,17 +8,29 @@
       <li>Name : {{ currentUser.name }}</li>
     </ul>
     <hr>
-    <ul>
+    <div class="notifications">
       <div v-if="notifications.length == 0">[No notifications ...]</div>
-      <li v-for="(notification, index) in notifications">
-        【{{ index }}】 [User ID : {{ notification.applicant_id }}] さんから [Plan ID : {{ notification.plan_id }}] に対して申し込みがありました。
-      </li>
-    </ul>
+      <div class="notification" v-for="(notification, index) in notifications">
+        <div class="index">【{{ index }}】</div>
+        <div class="applicant-name">Applicant Name : {{ notification.applicant.name }}</div>
+        <div class="plan-title">Plan title : {{ notification.plan.title }}</div>
+        --- --- --- --- --- --- ---
+      </div>
+    </div>
     <hr>
     <div class="memo">
+      <開発memo> <br>
       ・自分が申請を出したプランが承認されたとき <br>
       ・自分のプランに申請が出されたとき <br>
-      に通知が来るイメージ。
+      に通知が来るイメージ。<br>
+      <br>
+      PlanIDで表示することはできた。<br>
+      でも理想は<br>
+      『[UserName] さんから [PlanTitle] に対して申請が来ました』<br>
+      だから、うまいことデータひっぱって来ないといけないけど、<br>
+      いまいちRDBの良い使い方が分からない。<br>
+      個別にuser_idとplan_id使ってデータ持ってくるのはなんかダサい気がする。<br>
+      もっと良いやり方ありそう。<br>
     </div>
   </div>
 </template>
@@ -113,9 +125,6 @@ export default {
 
       console.log(response.data.notificatoins);
       this.notifications = response.data.notificatoins;
-
-      // PlanIDで表示することはできた。
-      // 
     }
 
     

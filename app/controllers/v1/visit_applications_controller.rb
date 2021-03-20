@@ -51,7 +51,29 @@ class V1::VisitApplicationsController < ApplicationController
     # 表示対象となるauthorizer_idを指定 (現在ログイン中のユーザー)
     authorizer_id = current_user.id
 
-    notificatoins = VisitApplication.where(authorizer_id: authorizer_id)
+    # 被申し込み一覧を取得
+    requests = VisitApplication.where(authorizer_id: authorizer_id)
+
+    notificatoins = []
+    requests.each_with_index{|request, index|
+      p "#{index}" => "#{request}"
+
+      plan = Plan.find(request.plan_id)
+      p plan
+      # ↑申し込まれたPlanの情報は取得完了
+
+      applicant = User.find(request.applicant_id)
+      p applicant
+      # ↑申し込んだUserの情報は取得完了
+
+      obj = {
+        request: request,
+        plan: plan,
+        applicant: applicant,
+      }
+
+      notificatoins.push(obj)
+    }
 
     if notificatoins.present?
       obj = {
