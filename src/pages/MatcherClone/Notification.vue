@@ -14,6 +14,10 @@
         <div class="index">【{{ index }}】</div>
         <div class="applicant-name">Applicant Name : {{ notification.applicant.name }}</div>
         <div class="plan-title">Plan title : {{ notification.plan.title }}</div>
+        <div class="temp">status : {{ notification.request.status }}</div>
+        <div v-if="notification.request.status == 'wating'">
+          <button>Accept</button> <button>Deny</button>
+        </div>
         --- --- --- --- --- --- ---
       </div>
     </div>
@@ -122,8 +126,17 @@ export default {
 
       console.log(response.data.notificatoins);
       this.notifications = response.data.notificatoins;
-    }
+    },
 
+    //Acceptボタンが押されたときに呼ばれる関数
+    accept() {
+      
+    },
+
+    //Denyボタンが押されたときに呼ばれる関数
+    deny() {
+
+    }
     
   },
 }
