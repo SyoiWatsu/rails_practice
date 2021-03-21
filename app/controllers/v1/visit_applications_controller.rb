@@ -1,6 +1,6 @@
 class V1::VisitApplicationsController < ApplicationController
 
-  before_action :authenticate_user!, only: [:create, :get_notifications]
+  before_action :authenticate_user!, only: [:create, :get_notifications, :update_status]
 
   def create
 
@@ -48,19 +48,14 @@ class V1::VisitApplicationsController < ApplicationController
 
   def update_status
     # Vueから値受け取り
-    # visit_application_id = params[:visit_application_id]
-    # status = params[:status] 
-
-    visit_application_id = 9 # 仮置き
-    status = "accepted" # 仮置き
+    visit_application_id = params[:visit_application_id]
+    status = params[:status] 
 
     # idでvisit_applicationsテーブルを検索
     visit_application = VisitApplication.find(visit_application_id)
-    p visit_application
 
     # statusカラムの値を変更
     visit_application.status = status
-    p visit_application
 
     # save
     if visit_application.save
@@ -68,7 +63,6 @@ class V1::VisitApplicationsController < ApplicationController
     else
       render(json: {msg: "failed ..."}, status: 500)
     end
-
   end
 
   def get_notifications

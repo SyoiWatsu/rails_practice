@@ -14,15 +14,14 @@
         <div class="index">【{{ index }}】</div>
         <div class="applicant-name">Applicant Name : {{ notification.applicant.name }}</div>
         <div class="plan-title">Plan title : {{ notification.plan.title }}</div>
-        <div class="temp">status : {{ notification.request.status }}</div>
         <div v-if="notification.request.status == 'wating'">
-          <button @click="accept(notification)">Accept</button> <button @click="deny(notification)">Deny</button>
+          <button @click="updateStatus(notification, 'accepted')">Accept</button> <button @click="updateStatus(notification, 'denied')">Deny</button>
         </div>
         <div v-else-if="notification.request.status == 'accepted'">
-          [ Already accepted ]
+          [You have already accepted ! ]
         </div>
         <div v-else-if="notification.request.status == 'denied'">
-          [ Already denied ]
+          [You have already denied ... ]
         </div>
         --- --- --- --- --- --- ---
       </div>
@@ -31,13 +30,10 @@
     <div class="memo">
       < 開発memo > <br>
       ・自分が申請を出したプランが承認されたとき <br>
-      ・自分のプランに申請が出されたとき <br>
+      ・自分のプランに申請が出されたとき ← done <br>
       に通知が来るイメージ。<br>
       <br>
-      被申し込み一覧の取得と通知画面表示はdone！ <br>
-      <br>
-      < NA > <br>
-      申請に対しての承認/非承認を選択可能にする 
+      
     </div>
   </div>
 </template>
@@ -135,23 +131,48 @@ export default {
     },
 
     //Acceptボタンが押されたときに呼ばれる関数
-    async accept(notification) {
-      console.log("called accept !");
-      console.log(notification);
+    async updateStatus(notification, status) {
 
-      notification.request.status = "accepted";
+      //エンドポイントのURL
+      const endpoint = "/api/v1/visit-application/update-status";
+
+      //Postリクエスト時に渡すbody
+      const body = {
+        status : status,
+        visit_application_id : notification.request.id,
+      }
+
+      //localStorageに保存してある各種ログインデータを取得
+      const access_token = localStorage.getItem("access-token");
+      const client = localStorage.getItem("client");
+      const uid = localStorage.getItem("uid");
+      console.log("access_token : " + access_token);
+
+      //Postリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : access_token,
+        "Client" : client,
+        "Uid" : uid,
+      };
+
+      //Postリクエスト
+      await axios.post(endpoint, body, {
+        headers : headers
+      })
+      .catch(function(error){ //処理失敗
+        console.log(error);
+
+        alert("保存に失敗しました...");
+      });
+
+      alert("You" + status + " !");
+
+      notification.request.status = status;
       
       // 見た目を変更するのはできた。
       // あとはフロント側の変更をバックエンド側にも伝えてあげるだけ！
 
     },
-
-    //Denyボタンが押されたときに呼ばれる関数
-    deny(notification) {
-      console.log("called deny !");
-      notification.request.status = "denied";
-
-    }
     
   },
 }
