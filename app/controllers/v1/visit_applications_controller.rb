@@ -46,8 +46,11 @@ class V1::VisitApplicationsController < ApplicationController
     end
   end
 
-  def change_status
-    
+  def update_status
+    # Vueから値受け取り
+    # idでvisit_applicationsテーブルを検索
+    # statusカラムの値を変更
+    # save
   end
 
   def get_notifications
