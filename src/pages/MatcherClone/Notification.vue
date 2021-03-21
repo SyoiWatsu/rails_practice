@@ -16,7 +16,13 @@
         <div class="plan-title">Plan title : {{ notification.plan.title }}</div>
         <div class="temp">status : {{ notification.request.status }}</div>
         <div v-if="notification.request.status == 'wating'">
-          <button>Accept</button> <button>Deny</button>
+          <button @click="accept(notification)">Accept</button> <button @click="deny(notification)">Deny</button>
+        </div>
+        <div v-else-if="notification.request.status == 'accepted'">
+          [ Already accepted ]
+        </div>
+        <div v-else-if="notification.request.status == 'denied'">
+          [ Already denied ]
         </div>
         --- --- --- --- --- --- ---
       </div>
@@ -129,12 +135,21 @@ export default {
     },
 
     //Acceptボタンが押されたときに呼ばれる関数
-    accept() {
+    async accept(notification) {
+      console.log("called accept !");
+      console.log(notification);
+
+      notification.request.status = "accepted";
       
+      // 見た目を変更するのはできた。
+      // あとはフロント側の変更をバックエンド側にも伝えてあげるだけ！
+
     },
 
     //Denyボタンが押されたときに呼ばれる関数
-    deny() {
+    deny(notification) {
+      console.log("called deny !");
+      notification.request.status = "denied";
 
     }
     

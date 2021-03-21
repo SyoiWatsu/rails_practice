@@ -46,6 +46,10 @@ class V1::VisitApplicationsController < ApplicationController
     end
   end
 
+  def change_status
+    
+  end
+
   def get_notifications
 
     # 表示対象となるauthorizer_idを指定 (現在ログイン中のユーザー)
