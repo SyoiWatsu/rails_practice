@@ -41,16 +41,34 @@ class V1::VisitApplicationsController < ApplicationController
 
         render(json: obj, status: 200)
       else
-        render({msg: "failed ..."}, status: 500)
+        render(json: {msg: "failed ..."}, status: 500)
       end
     end
   end
 
   def update_status
     # Vueから値受け取り
+    # visit_application_id = params[:visit_application_id]
+    # status = params[:status] 
+
+    visit_application_id = 9 # 仮置き
+    status = "accepted" # 仮置き
+
     # idでvisit_applicationsテーブルを検索
+    visit_application = VisitApplication.find(visit_application_id)
+    p visit_application
+
     # statusカラムの値を変更
+    visit_application.status = status
+    p visit_application
+
     # save
+    if visit_application.save
+      render(json: {msg: "Status update completed !"}, status: 200)
+    else
+      render(json: {msg: "failed ..."}, status: 500)
+    end
+
   end
 
   def get_notifications
@@ -62,17 +80,11 @@ class V1::VisitApplicationsController < ApplicationController
     requests = VisitApplication.where(authorizer_id: authorizer_id)
 
     notificatoins = []
-    requests.each_with_index{|request, index|
-      p "#{index}" => "#{request}"
+    requests.each_with_index{ |request, index|
 
       plan = Plan.find(request.plan_id)
-      p plan
-      # ↑申し込まれたPlanの情報は取得完了
-
       applicant = User.find(request.applicant_id)
-      p applicant
-      # ↑申し込んだUserの情報は取得完了
-
+      
       obj = {
         request: request,
         plan: plan,
@@ -90,7 +102,7 @@ class V1::VisitApplicationsController < ApplicationController
 
       render(json: obj, status: 200)
     else
-      render({msg: "failed ..."}, status: 500)
+      render(json: {msg: "failed ..."}, status: 500)
     end
   end
 end
