@@ -1,5 +1,5 @@
 class VisitApplication < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, foreign_key: :applicant_id
   belongs_to :plan
 end
 

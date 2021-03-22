@@ -71,16 +71,30 @@ class V1::VisitApplicationsController < ApplicationController
     authorizer_id = current_user.id
 
     # 被申し込み一覧を取得
-    requests = VisitApplication.where(authorizer_id: authorizer_id)
+    # === === === === ===
+    # preload ver
+    visit_applications = VisitApplication.where(authorizer_id: authorizer_id).preload(:user, :plan)
+    # eager_load ver
+    # visit_applications = VisitApplication.where(authorizer_id: authorizer_id).eager_load(:user, :plan)
+    # === === === === ===
+    # ↑どっちが早いんじゃろうな？
 
     notificatoins = []
-    requests.each_with_index{ |request, index|
+    visit_applications.each_with_index{ |visit_application, index|
 
-      plan = Plan.find(request.plan_id)
-      applicant = User.find(request.applicant_id)
+      # === === === === ===
+      # Good
+      plan = visit_application.plan
+      applicant = visit_application.user
+      # ↑ belongs_toで紐づけてるから、これで取ってこられる
+
+      # Bad
+      # plan = Plan.find(visit_application.plan_id)
+      # applicant = User.find(visit_application.applicant_id)
+      # === === === === ===
       
       obj = {
-        request: request,
+        request: visit_application,
         plan: plan,
         applicant: applicant,
       }

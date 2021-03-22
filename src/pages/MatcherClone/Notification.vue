@@ -34,6 +34,7 @@
       に通知が来るイメージ。<br>
       <br>
       
+      
     </div>
   </div>
 </template>
@@ -126,8 +127,8 @@ export default {
           alert("faild to get notification ...");
         });
 
-      console.log(response.data.notificatoins);
       this.notifications = response.data.notificatoins;
+      console.log(this.notifications);
     },
 
     //Acceptボタンが押されたときに呼ばれる関数
@@ -138,8 +139,8 @@ export default {
 
       //Postリクエスト時に渡すbody
       const body = {
-        status : status,
-        visit_application_id : notification.request.id,
+        status: status,
+        visit_application_id: notification.request.id,
       }
 
       //localStorageに保存してある各種ログインデータを取得
@@ -150,14 +151,14 @@ export default {
 
       //Postリクエスト時に渡すheaders
       const headers = {
-        "Access-Token" : access_token,
-        "Client" : client,
-        "Uid" : uid,
+        "Access-Token": access_token,
+        "Client": client,
+        "Uid": uid,
       };
 
       //Postリクエスト
       await axios.post(endpoint, body, {
-        headers : headers
+        headers: headers
       })
       .catch(function(error){ //処理失敗
         console.log(error);
@@ -168,10 +169,6 @@ export default {
       alert("You" + status + " !");
 
       notification.request.status = status;
-      
-      // 見た目を変更するのはできた。
-      // あとはフロント側の変更をバックエンド側にも伝えてあげるだけ！
-
     },
     
   },
