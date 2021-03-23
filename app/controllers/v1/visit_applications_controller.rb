@@ -11,11 +11,9 @@ class V1::VisitApplicationsController < ApplicationController
     status = "wating"
 
     # 既に申込済みかどうかを確認
-    have_already_applied = VisitApplication.find_by(plan_id: plan_id, applicant_id: applicant_id)
+    has_already_applied = VisitApplication.where(plan_id: plan_id).where(applicant_id: applicant_id).exists?
 
-    p have_already_applied.present?
-
-    if have_already_applied.present?
+    if has_already_applied
       # render({msg: "you have already applied ..."}, status: 500)
       # ↑ これ返したいけど、この1行でエラー出てる。なんで...？
     else
