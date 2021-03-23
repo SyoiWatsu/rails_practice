@@ -18,11 +18,13 @@ class V1::VisitApplicationsController < ApplicationController
       # ↑ これ返したいけど、この1行でエラー出てる。なんで...？
     else
       # ②受け取った値を元にVisit_applicationのインスタンス作成
-      new_visit_application = VisitApplication.new()
-      new_visit_application.applicant_id = applicant_id
-      new_visit_application.authorizer_id = authorizer_id
-      new_visit_application.plan_id = plan_id
-      new_visit_application.status = status
+      new_visit_application = VisitApplication.new(
+        applicant_id = applicant_id,
+        authorizer_id = authorizer_id,
+        plan_id = plan_id,
+        status = status,
+      )
+      
 
       # ③保存
       if new_visit_application.save
