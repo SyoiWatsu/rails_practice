@@ -13,6 +13,7 @@
         <ul>
           <li v-for="(plan, index) in plans" v-on:click="showDetail(plan.id)">Plan_{{ index + 1 }} : {{ plan.title }}</li>
         </ul>
+        --- --- --- --- --- --- ---
       </div>
     </div>
     <hr>

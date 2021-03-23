@@ -82,7 +82,6 @@ export default {
       };
       this.$router.push({name: "PlanDetail", params: params});
     },
-
   },
 
   beforeRouteUpdate (to, from, next) {

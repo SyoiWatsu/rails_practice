@@ -35,15 +35,6 @@
       </div>
     </div>
     <hr>
-    <div class="memo">
-      < 開発memo > <br>
-      ・自分が申請を出したプランが承認されたとき <br>
-      ・自分のプランに申請が出されたとき ← done <br>
-      に通知が来るイメージ。<br>
-      <br>
-      
-      
-    </div>
   </div>
 </template>
 
@@ -155,7 +146,6 @@ export default {
       const access_token = localStorage.getItem("access-token");
       const client = localStorage.getItem("client");
       const uid = localStorage.getItem("uid");
-      console.log("access_token : " + access_token);
 
       //Postリクエスト時に渡すheaders
       const headers = {
