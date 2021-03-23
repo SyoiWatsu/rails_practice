@@ -78,6 +78,8 @@ class V1::VisitApplicationsController < ApplicationController
     # visit_applications = VisitApplication.where(authorizer_id: authorizer_id).eager_load(:user, :plan)
     # === === === === ===
     # ↑どっちが早いんじゃろうな？
+    # joinが違うのは確実。なぜなら『先取りしてキャッシュ』ということはしてくれないから。
+    # 参照先のテーブルの値で絞り込みしないからpreloadで良さそうかな？
 
     notificatoins = []
     visit_applications.each_with_index{ |visit_application, index|
