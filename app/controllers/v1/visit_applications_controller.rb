@@ -67,22 +67,25 @@ class V1::VisitApplicationsController < ApplicationController
 
   def get_notifications
 
+    # 通知するべきデータを全部持つ配列
+    notificatoins = [] 
+
+    # === === 自分宛ての申請 === ===
     # 表示対象となるauthorizer_idを指定 (現在ログイン中のユーザー)
     authorizer_id = current_user.id
 
     # 被申し込み一覧を取得
     # === === === === ===
     # preload ver
-    visit_applications = VisitApplication.where(authorizer_id: authorizer_id).preload(:user, :plan)
+    visit_applications_be_applied = VisitApplication.where(authorizer_id: authorizer_id).preload(:user, :plan)
     # eager_load ver
-    # visit_applications = VisitApplication.where(authorizer_id: authorizer_id).eager_load(:user, :plan)
+    # visit_applications_be_applied = VisitApplication.where(authorizer_id: authorizer_id).eager_load(:user, :plan)
     # === === === === ===
     # ↑どっちが早いんじゃろうな？
     # joinが違うのは確実。なぜなら『先取りしてキャッシュ』ということはしてくれないから。
     # 参照先のテーブルの値で絞り込みしないからpreloadで良さそうかな？
 
-    notificatoins = []
-    visit_applications.each_with_index{ |visit_application, index|
+    visit_applications_be_applied.each_with_index{ |visit_application, index|
 
       # === === === === ===
       # Good
@@ -99,6 +102,31 @@ class V1::VisitApplicationsController < ApplicationController
         request: visit_application,
         plan: plan,
         applicant: applicant,
+        is_applied: true,
+      }
+
+      notificatoins.push(obj)
+    }
+
+    # === === 自分がした申請 && 承認された === ===
+    applicant_id = current_user.id
+
+    visit_applications_applied = VisitApplication.where(applicant_id: applicant_id).preload(:user, :plan)
+    visit_applications_applied.each_with_index{ |visit_application, index|
+
+      # statusがacceptedでない場合は処理離脱
+      if visit_application[:status] != "accepted" 
+        next 
+      end
+
+      plan = visit_application.plan
+      applicant = visit_application.user
+      
+      obj = {
+        request: visit_application,
+        plan: plan,
+        planner: applicant,
+        is_applied: false,
       }
 
       notificatoins.push(obj)

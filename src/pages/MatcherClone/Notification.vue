@@ -9,19 +9,27 @@
     </ul>
     <hr>
     <div class="notifications">
-      <div v-if="notifications.length == 0">[No notifications ...]</div>
+      <div v-if="notifications.length == 0">[ No notifications ... ]</div>
       <div class="notification" v-for="(notification, index) in notifications">
         <div class="index">【{{ index }}】</div>
-        <div class="applicant-name">Applicant Name : {{ notification.applicant.name }}</div>
-        <div class="plan-title">Plan title : {{ notification.plan.title }}</div>
-        <div v-if="notification.request.status == 'wating'">
-          <button @click="updateStatus(notification, 'accepted')">Accept</button> <button @click="updateStatus(notification, 'denied')">Deny</button>
+        <div v-if="notification.is_applied == true">
+          <div class="applicant-name">Applicant Name : {{ notification.applicant.name }}</div>
+          <div class="plan-title">Plan Title : {{ notification.plan.title }}</div>
+          <div v-if="notification.request.status == 'wating'">
+            <button @click="updateStatus(notification, 'accepted')">Accept</button>
+            <button @click="updateStatus(notification, 'denied')">Deny</button>
+          </div>
+          <div v-else-if="notification.request.status == 'accepted'">
+            → [ You have already accepted ! ]
+          </div>
+          <div v-else-if="notification.request.status == 'denied'">
+            → [ You have already denied ... ]
+          </div>
         </div>
-        <div v-else-if="notification.request.status == 'accepted'">
-          [You have already accepted ! ]
-        </div>
-        <div v-else-if="notification.request.status == 'denied'">
-          [You have already denied ... ]
+        <div v-else>
+          <div class="planner-name">Planner Name : {{ notification.planner.name }}</div>
+          <div class="plan-title">Plan Title : {{ notification.plan.title }}</div>
+          <div>→ [ You are accepted !!! 🎉 ]</div>
         </div>
         --- --- --- --- --- --- ---
       </div>
@@ -166,7 +174,7 @@ export default {
         alert("保存に失敗しました...");
       });
 
-      alert("You" + status + " !");
+      alert("You " + status + " !");
 
       notification.request.status = status;
     },
