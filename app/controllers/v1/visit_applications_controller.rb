@@ -85,52 +85,58 @@ class V1::VisitApplicationsController < ApplicationController
     # joinが違うのは確実。なぜなら『先取りしてキャッシュ』ということはしてくれないから。
     # 参照先のテーブルの値で絞り込みしないからpreloadで良さそうかな？
 
-    visit_applications_be_applied.each_with_index{ |visit_application, index|
+    if visit_applications_be_applied.present?
+      visit_applications_be_applied.each_with_index{ |visit_application, index|
 
-      # === === === === ===
-      # Good
-      plan = visit_application.plan
-      applicant = visit_application.user
-      # ↑ belongs_toで紐づけてるから、これで取ってこられる
+        # === === === === ===
+        # Good
+        plan = visit_application.plan
+        applicant = visit_application.user
+        # ↑ belongs_toで紐づけてるから、これで取ってこられる
 
-      # Bad
-      # plan = Plan.find(visit_application.plan_id)
-      # applicant = User.find(visit_application.applicant_id)
-      # === === === === ===
-      
-      obj = {
-        request: visit_application,
-        plan: plan,
-        applicant: applicant,
-        is_applied: true,
+        # Bad
+        # plan = Plan.find(visit_application.plan_id)
+        # applicant = User.find(visit_application.applicant_id)
+        # === === === === ===
+        
+        obj = {
+          request: visit_application,
+          plan: plan,
+          applicant: applicant,
+          is_applied: true,
+        }
+        p obj
+
+        notificatoins.push(obj)
       }
-
-      notificatoins.push(obj)
-    }
+    end
+    
+    
 
     # === === 自分がした申請 && 承認された === ===
     applicant_id = current_user.id
-
     visit_applications_applied = VisitApplication.where(applicant_id: applicant_id).preload(:user, :plan)
-    visit_applications_applied.each_with_index{ |visit_application, index|
+    if visit_applications_applied.present?
+      visit_applications_applied.each_with_index{ |visit_application, index|
 
-      # statusがacceptedでない場合は処理離脱
-      if visit_application[:status] != "accepted" 
-        next 
-      end
+        # statusがacceptedでない場合は処理離脱
+        if visit_application[:status] != "accepted" 
+          next 
+        end
 
-      plan = visit_application.plan
-      applicant = visit_application.user
-      
-      obj = {
-        request: visit_application,
-        plan: plan,
-        planner: applicant,
-        is_applied: false,
+        plan = visit_application.plan
+        applicant = visit_application.user
+        
+        obj = {
+          request: visit_application,
+          plan: plan,
+          planner: applicant,
+          is_applied: false,
+        }
+
+        notificatoins.push(obj)
       }
-
-      notificatoins.push(obj)
-    }
+    end
 
     if notificatoins.present?
       obj = {

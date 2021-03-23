@@ -125,7 +125,7 @@ export default {
         "Uid" : this.uid,
       };
 
-      const response = await axios
+      let response = await axios
         .get(endpoint, {
           headers : headers,
           data : {},
