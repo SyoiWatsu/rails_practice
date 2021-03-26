@@ -30,8 +30,4 @@ Rails.application.routes.draw do
   post "/api/v1/visit-application/update-status", controller: "v1/visit_applications", action: :update_status
   get "api/v1/notifications", controller: "v1/visit_applications", action: :get_notifications
 
-  # なんか末尾の"search"がidとして認識されてしまっているっぽい...？
-  # どうすれば良いんだろう...？
-  # → まさかと思ってルーティングの順番入れ替えたらイケた。
-  # もっとイケてる対応策ないのかな？
 end

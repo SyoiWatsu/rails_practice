@@ -14,6 +14,9 @@
 <script>
 import axios from "axios"; //axiosを使う準備
 
+const SIGN_OUT_URL = "/api/v1/auth/sign_out";
+const GET_CURRENT_USER_URL = "/api/current-user";
+
 //他のファイルでimportされたときに戻り値
 export default {
   components: {
@@ -45,9 +48,6 @@ export default {
 
       const result = confirm("SignOut from [" + this.uid + "] .\n\nOK?");
       if(result != true){ return }
-      
-      //現在ログイン中のユーザーからSignOut
-      const endpoint = "http://localhost:5000/api/v1/auth/sign_out";
 
       //リクエスト時に渡すheaders
       const headers = {
@@ -57,7 +57,7 @@ export default {
       };
 
       const response = await axios
-        .delete(endpoint, {
+        .delete(SIGN_OUT_URL, {
           headers : headers,
         })
         .catch(function(error){
@@ -75,7 +75,6 @@ export default {
 
     //現在ログイン中のユーザーを取得
     async fetchCurrentUser() {
-      const endpoint = "/api/current-user";
 
       //localStorageに保存してある各種ログインデータを取得
       this.accessToken = localStorage.getItem("access-token");
@@ -92,7 +91,7 @@ export default {
       const vm = this; //自身のVueインスタンスを変数vmに格納
 
       const response = await axios
-        .get(endpoint, {
+        .get(GET_CURRENT_USER_URL, {
           headers : headers,
           data : {},
         })

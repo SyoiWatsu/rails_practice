@@ -21,6 +21,8 @@
 <script>
 import axios from "axios"; //axiosを使う準備
 
+const PLAN_SEARCH_URL = "/api/v1/plans/search";
+
 //他のファイルでimportされたときに戻り値
 export default {
   components: {
@@ -47,16 +49,12 @@ export default {
     //Plan検索結果を取得する関数
     async fetchSearchResults() {
 
-      //エンドポイントのURL
-      const endpoint = "/api/v1/plans/search";
       const params = {
         keyword : this.keyword,
         // ココまだ複数条件対応できていない
       };
 
-      console.log("here");
-
-      const responce = await axios.get(endpoint, {params : params});
+      const responce = await axios.get(PLAN_SEARCH_URL, {params : params});
       this.plansData = responce.data.search_result;
     },
 
