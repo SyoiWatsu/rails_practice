@@ -1,13 +1,14 @@
 <template>
   <div>
     <h1>PlanDetail</h1>
-    Plan ID：<input type="number" v-model="plan_id">
+    Plan ID : <input type="number" v-model="plan.id">
     <button v-on:click="submit">Submit</button>
     <ul>
-      <li>Title : {{ title }}</li>
-      <li>Detail : {{ detail }}</li>
-      <li>User ID : {{ user_id }}</li>
+      <li>Title : {{ plan.title }}</li>
+      <li>Detail : {{ plan.detail }}</li>
+      <li>User ID : {{ plan.userId }}</li>
     </ul>
+    <button v-on:click="apply">Apply</button>
   </div>
 </template>
 
@@ -23,10 +24,13 @@ export default {
   },
   data() {
     return {
-      title : "",
-      detail : "",
-      user_id : 0,
-      plan_id : this.$route.params.id,
+      plan: {
+        id: this.$route.params.id,
+        title: "",
+        detail: "",
+        userId: 0, //プラン作成者のuser_id
+      },
+      currentUserId: 0, //現在ログイン中のuser_id
     };
   },
   watch: {
@@ -35,30 +39,29 @@ export default {
   },
   mounted() {
     this.fetchPlanDetail();
+    this.fetchCurrentUser();
   },
   methods: {
 
-    submit : function(){
+    submit() {
 
-      if(this.plan_id === 0 || this.plan_id === ""){
+      if(this.plan.id === 0 || this.plan.id === ""){
         alert("Plan ID が指定されていません！");
         return;
       }
 
-      const baseUrl = "matcher-clone/plans/";
       const params ={
-        id: this.plan_id
+        id: this.plan.id,
       };
       this.$router.push({name: "PlanDetail", params: params});
       
       this.fetchPlanDetail();
     },
 
-
-    fetchPlanDetail : function(){
+    async fetchPlanDetail() {
 
       //エンドポイントのURL
-      const endpoint = "/api/v1/plans/" + this.plan_id;
+      const endpoint = "/api/v1/plans/" + this.plan.id;
 
       //localStorageに保存してある各種ログインデータを取得
       const access_token = localStorage.getItem("access-token");
@@ -78,37 +81,101 @@ export default {
       //自身のvueインスタンスを変数vmに格納しておく
       let vm = this;
 
-      //Getリクエスト
-      axios.get(endpoint, {
+      const response = await axios.get(endpoint, {
         headers : headers,
         data : {},
       })
-      .then(function(response){ //処理成功
-        console.log(response);
-        const planData = response.data.plan;
-        console.log(planData);
-
-        vm.title = planData.title;
-        vm.detail = planData.detail;
-        vm.user_id = planData.user_id;
-
-        const msg = "取得成功！" + "\n" + 
-                    "title : " + vm.title + "\n" + 
-                    "detail : " + vm.detail + "\n" + 
-                    "user_id : " + vm.user_id;
-
-        // alert(msg);
-      })
-      .catch(function(error){ //処理失敗
+      .catch(function(error){
         console.log(error);
-
         alert("取得に失敗しました...");
 
-        vm.title = "[No Data]";
-        vm.detail = "[No Data]";
-        vm.user_id = "[No Data]";
+        vm.plan.title = "[No Data]";
+        vm.plan.detail = "[No Data]";
+        vm.plan.userId = "[No Data]";
       });
 
+      const plan = response.data.plan;
+      this.plan.title = plan.title;
+      this.plan.detail = plan.detail;
+      this.plan.userId = plan.user_id;
+    },
+
+    async apply() {
+      const msg = "Apply this plan ?" + "\n" + 
+                  "--- --- --- --- ---" + "\n" + 
+                  "title : " + this.plan.title + "\n" + 
+                  "detail : " + this.plan.detail + "\n" + 
+                  "userId : " + this.plan.userId + "\n" + 
+                  "--- --- --- --- ---" 
+                  ;
+      const result = confirm(msg);
+      if(result == false){ return }
+
+      //エンドポイントのURL
+      const endpoint = "/api/v1/visit-application/new";
+
+      //Postリクエスト時に渡すbody
+      const body = {
+        authorizer_id: this.plan.userId, //被申込者のuser_id
+        plan_id: this.plan.id, //申し込んだPlanのid
+        status: "waiting",
+      };
+
+      //localStorageに保存してある各種ログインデータを取得
+      const access_token = localStorage.getItem("access-token");
+      const client = localStorage.getItem("client");
+      const uid = localStorage.getItem("uid");
+
+      //Postリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : access_token,
+        "Client" : client,
+        "Uid" : uid,
+      };
+      
+      const response = await axios.post(endpoint, body, {
+        headers : headers,
+      })
+      .catch(function(error){
+        console.log(error);
+        alert("申し込みに失敗しました...");
+      });
+
+      if(response.status == 204){
+        const msg = "you have already applied, " + "\n" +
+                    "so you cannot apply this plan.";
+        alert(msg);
+      }
+
+      console.log(response.status);
+    },
+
+    //現在ログイン中のユーザーを取得
+    fetchCurrentUser : async function(){
+      const endpoint = "/api/current-user";
+
+      //localStorageに保存してある各種ログインデータを取得
+      const access_token = localStorage.getItem("access-token");
+      const client = localStorage.getItem("client");
+      const uid = localStorage.getItem("uid");
+      console.log("access_token : " + access_token);
+
+      //Postリクエスト時に渡すheaders
+      const headers = {
+        "Access-Token" : access_token,
+        "Client" : client,
+        "Uid" : uid,
+      };
+
+      //Getリクエスト
+      const response = await axios.get(endpoint, {
+        headers : headers,
+        data : {},
+      });
+
+      console.log(response);
+      this.currentUserId = response.data.current_user.id;
+      console.log("this.currentUserId : " + this.currentUserId);
     },
   },
 }

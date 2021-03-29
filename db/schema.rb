@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210218164148) do
+ActiveRecord::Schema.define(version: 20210319033426) do
 
   create_table "animals", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.text     "name",       limit: 65535
@@ -59,12 +59,12 @@ ActiveRecord::Schema.define(version: 20210218164148) do
   end
 
   create_table "visit_applications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
-    t.integer  "visit_application_id"
     t.integer  "plan_id"
-    t.integer  "user_id"
-    t.string   "status",               limit: 255
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.integer  "applicant_id"
+    t.string   "status",        limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "authorizer_id"
   end
 
 end
