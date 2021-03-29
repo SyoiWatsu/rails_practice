@@ -105,7 +105,6 @@ class V1::VisitApplicationsController < ApplicationController
           applicant: applicant,
           is_applied: true,
         }
-        p obj
 
         notificatoins.push(obj)
       }

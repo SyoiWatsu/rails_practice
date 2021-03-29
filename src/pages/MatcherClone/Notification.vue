@@ -41,6 +41,10 @@
 <script>
 import axios from "axios"; //axiosを使う準備
 
+const GET_CURRENT_USER_URL = "/api/current-user";
+const GET_NOTIFICATIONS_URL = "api/v1/notifications";
+const UPDATE_STATUS_URL = "/api/v1/visit-application/update-status";
+
 //他のファイルでimportされたときに戻り値
 export default {
   components: {
@@ -73,7 +77,6 @@ export default {
 
     //現在ログイン中のユーザーを取得
     async fetchCurrentUser() {
-      const endpoint = "/api/current-user";
 
       //localStorageに保存してある各種ログインデータを取得
       this.accessToken = localStorage.getItem("access-token");
@@ -90,7 +93,7 @@ export default {
       const vm = this; //自身のVueインスタンスを変数vmに格納
 
       const response = await axios
-        .get(endpoint, {
+        .get(GET_CURRENT_USER_URL, {
           headers : headers,
           data : {},
         })
@@ -107,7 +110,6 @@ export default {
     },
 
     async getNotifications() {
-      const endpoint = "api/v1/notifications";
 
       //Getリクエスト時に渡すheaders
       const headers = {
@@ -117,7 +119,7 @@ export default {
       };
 
       let response = await axios
-        .get(endpoint, {
+        .get(GET_NOTIFICATIONS_URL, {
           headers : headers,
           data : {},
         })
@@ -127,14 +129,10 @@ export default {
         });
 
       this.notifications = response.data.notificatoins;
-      console.log(this.notifications);
     },
 
     //Acceptボタンが押されたときに呼ばれる関数
     async updateStatus(notification, status) {
-
-      //エンドポイントのURL
-      const endpoint = "/api/v1/visit-application/update-status";
 
       //Postリクエスト時に渡すbody
       const body = {
@@ -155,7 +153,7 @@ export default {
       };
 
       //Postリクエスト
-      await axios.post(endpoint, body, {
+      await axios.post(UPDATE_STATUS_URL, body, {
         headers: headers
       })
       .catch(function(error){ //処理失敗
