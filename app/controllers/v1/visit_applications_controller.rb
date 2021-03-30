@@ -24,7 +24,6 @@ class V1::VisitApplicationsController < ApplicationController
         plan_id = plan_id,
         status = status,
       )
-      
 
       # ③保存
       if new_visit_application.save
