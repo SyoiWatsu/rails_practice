@@ -14,8 +14,7 @@ class V1::VisitApplicationsController < ApplicationController
     has_already_applied = VisitApplication.where(plan_id: plan_id).where(applicant_id: applicant_id).exists?
 
     if has_already_applied
-      # render({msg: "you have already applied ..."}, status: 500)
-      # ↑ これ返したいけど、この1行でエラー出てる。なんで...？
+      render(json: {msg: "you have already applied ..."}, status: 500)
     else
       # ②受け取った値を元にVisit_applicationのインスタンス作成
       new_visit_application = VisitApplication.new(
@@ -74,15 +73,8 @@ class V1::VisitApplicationsController < ApplicationController
     authorizer_id = current_user.id
 
     # 被申し込み一覧を取得
-    # === === === === ===
-    # preload ver
-    visit_applications_be_applied = VisitApplication.where(authorizer_id: authorizer_id).preload(:user, :plan)
-    # eager_load ver
-    # visit_applications_be_applied = VisitApplication.where(authorizer_id: authorizer_id).eager_load(:user, :plan)
-    # === === === === ===
-    # ↑どっちが早いんじゃろうな？
-    # joinが違うのは確実。なぜなら『先取りしてキャッシュ』ということはしてくれないから。
-    # 参照先のテーブルの値で絞り込みしないからpreloadで良さそうかな？
+    # visit_applications_be_applied = VisitApplication.where(authorizer_id: authorizer_id).preload(:user, :plan)
+    visit_applications_be_applied = current_user.receive_visit_applications.preload(:user, :plan) # ←コッチのがイケてる
 
     visit_applications_be_applied.each_with_index{ |visit_application, index|
 
@@ -100,7 +92,9 @@ class V1::VisitApplicationsController < ApplicationController
 
     # === === 自分がした申請 && 承認された === ===
     applicant_id = current_user.id
-    visit_applications_applied = VisitApplication.where(applicant_id: applicant_id).preload(:user, :plan)
+    # visit_applications_applied = VisitApplication.where(applicant_id: applicant_id).preload(:user, :plan)
+    visit_applications_applied = current_user.send_visit_applications.preload(:user, :plan)
+
     if visit_applications_applied.present?
       visit_applications_applied.each{ |visit_application|
 
