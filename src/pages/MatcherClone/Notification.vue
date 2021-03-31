@@ -12,7 +12,7 @@
       <div v-if="notifications.length == 0">[ No notifications ... ]</div>
       <div class="notification" v-for="(notification, index) in notifications">
         <div class="index">【{{ index }}】</div>
-        <div v-if="notification.is_applied == true">
+        <div v-if="notification.is_applied">
           <div class="applicant-name">Applicant Name : {{ notification.applicant.name }}</div>
           <div class="plan-title">Plan Title : {{ notification.plan.title }}</div>
           <div v-if="notification.request.status == 'wating'">

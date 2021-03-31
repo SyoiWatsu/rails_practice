@@ -84,30 +84,17 @@ class V1::VisitApplicationsController < ApplicationController
     # joinが違うのは確実。なぜなら『先取りしてキャッシュ』ということはしてくれないから。
     # 参照先のテーブルの値で絞り込みしないからpreloadで良さそうかな？
 
-    if visit_applications_be_applied.present?
-      visit_applications_be_applied.each_with_index{ |visit_application, index|
+    visit_applications_be_applied.each_with_index{ |visit_application, index|
 
-        # === === === === ===
-        # Good
-        plan = visit_application.plan
-        applicant = visit_application.user
-        # ↑ belongs_toで紐づけてるから、これで取ってこられる
-
-        # Bad
-        # plan = Plan.find(visit_application.plan_id)
-        # applicant = User.find(visit_application.applicant_id)
-        # === === === === ===
-        
-        obj = {
-          request: visit_application,
-          plan: plan,
-          applicant: applicant,
-          is_applied: true,
-        }
-
-        notificatoins.push(obj)
+      obj = {
+        request: visit_application,
+        plan: visit_application.plan,
+        applicant: visit_application.user,
+        is_applied: true,
       }
-    end
+
+      notificatoins.push(obj)
+    }
     
     
 
@@ -115,12 +102,10 @@ class V1::VisitApplicationsController < ApplicationController
     applicant_id = current_user.id
     visit_applications_applied = VisitApplication.where(applicant_id: applicant_id).preload(:user, :plan)
     if visit_applications_applied.present?
-      visit_applications_applied.each_with_index{ |visit_application, index|
+      visit_applications_applied.each{ |visit_application|
 
         # statusがacceptedでない場合は処理離脱
-        if visit_application[:status] != "accepted" 
-          next 
-        end
+        next if visit_application[:status] != "accepted"  
 
         plan = visit_application.plan
         applicant = visit_application.user
