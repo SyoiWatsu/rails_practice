@@ -13,11 +13,12 @@
 
 <script>
 import axios from "axios"; //axiosを使う準備
+import {getUserAuthHeaders} from "../../js/utils";
 
 const SIGN_OUT_URL = "/api/v1/auth/sign_out";
 const GET_CURRENT_USER_URL = "/api/current-user";
 
-//他のファイルでimportされたときに戻り値
+//他のファイルでimportされたときの戻り値
 export default {
   components: {
   },
@@ -76,17 +77,8 @@ export default {
     //現在ログイン中のユーザーを取得
     async fetchCurrentUser() {
 
-      //localStorageに保存してある各種ログインデータを取得
-      this.accessToken = localStorage.getItem("access-token");
-      this.client = localStorage.getItem("client");
-      this.uid = localStorage.getItem("uid");
-
       //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : this.accessToken,
-        "Client" : this.client,
-        "Uid" : this.uid,
-      };
+      const headers = getUserAuthHeaders();
 
       const vm = this; //自身のVueインスタンスを変数vmに格納
 

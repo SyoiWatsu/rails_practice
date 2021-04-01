@@ -15,6 +15,9 @@
 
 <script>
 import axios from "axios"; //axiosを使う準備
+import {getUserAuthHeaders} from "../../js/utils";
+
+const GET_CURRENT_USER_URL = "/api/current-user";
 
 //他のファイルでimportされたときに戻り値
 export default {
@@ -63,21 +66,11 @@ export default {
 
     //現在ログイン中のユーザーを取得
     async fetchCurrentUser() {
-      const endpoint = "/api/current-user";
-
-      //localStorageに保存してある各種ログインデータを取得
-      const accessToken = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
 
       //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : accessToken,
-        "Client" : client,
-        "Uid" : uid,
-      };
+      const headers = getUserAuthHeaders();
 
-      const response = await axios.get(endpoint, {
+      const response = await axios.get(GET_CURRENT_USER_URL, {
           headers : headers,
           data : {},
         });

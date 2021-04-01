@@ -19,6 +19,10 @@
 
 <script>
 import axios from "axios"; //axiosを使う準備
+import { getUserAuthHeaders } from '../../js/utils';
+
+const SIGN_UP_URL = "http://localhost:5000/api/v1/auth";
+const GET_CURRENT_USER_URL = "/api/current-user";
 
 //他のファイルでimportされたときに戻り値
 export default {
@@ -45,7 +49,6 @@ export default {
     async signUp() {
       
       //ユーザーの入力情報を受け取ってSignUp
-      const endpoint = "http://localhost:5000/api/v1/auth";
       const body = {
         email : this.email,
         password : this.password,
@@ -55,7 +58,7 @@ export default {
       const vm = this;
 
       const response = await axios
-        .post(endpoint, body)
+        .post(SIGN_UP_URL, body)
         .catch(function(error){
           console.log(error);
         });
@@ -74,21 +77,11 @@ export default {
 
     //現在ログイン中のユーザーを取得
     async fetchCurrentUser() {
-      const endpoint = "/api/current-user";
-
-      //localStorageに保存してある各種ログインデータを取得
-      const accessToken = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
 
       //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : accessToken,
-        "Client" : client,
-        "Uid" : uid,
-      };
+      const headers = getUserAuthHeaders();
 
-      const response = await axios.get(endpoint, {
+      const response = await axios.get(GET_CURRENT_USER_URL, {
           headers : headers,
           data : {},
         });

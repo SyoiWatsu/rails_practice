@@ -24,6 +24,8 @@
 <script>
 import axios from "axios"; //axiosを使う準備
 
+const PLANS_INDEX_URL = "/api/v1/plans";
+
 //他のファイルでimportされたときに戻り値
 export default {
   components: {
@@ -68,8 +70,7 @@ export default {
 
     // Planのデータを取得する関数
     async fetchPlansData() {
-      const endpoint = "/api/v1/plans";
-      const response = await axios.get(endpoint);
+      const response = await axios.get(PLANS_INDEX_URL);
       this.groupedPlans = response.data.groupedPlans;
     },
   },

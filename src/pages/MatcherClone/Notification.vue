@@ -40,6 +40,8 @@
 
 <script>
 import axios from "axios"; //axiosを使う準備
+import {getUserAuthHeaders} from "../../js/utils";
+// import {getUserAuthHeaders} from "@/src/js/utils"; //←ほんとはこんな感じで書きたい
 
 const GET_CURRENT_USER_URL = "/api/current-user";
 const GET_NOTIFICATIONS_URL = "api/v1/notifications";
@@ -78,20 +80,9 @@ export default {
     //現在ログイン中のユーザーを取得
     async fetchCurrentUser() {
 
-      //localStorageに保存してある各種ログインデータを取得
-      this.accessToken = localStorage.getItem("access-token");
-      this.client = localStorage.getItem("client");
-      this.uid = localStorage.getItem("uid");
-
-      //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : this.accessToken,
-        "Client" : this.client,
-        "Uid" : this.uid,
-      };
+      const headers = getUserAuthHeaders();
 
       const vm = this; //自身のVueインスタンスを変数vmに格納
-
       const response = await axios
         .get(GET_CURRENT_USER_URL, {
           headers : headers,
@@ -140,16 +131,10 @@ export default {
         visit_application_id: notification.request.id,
       }
 
-      //localStorageに保存してある各種ログインデータを取得
-      const access_token = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
-
-      //Postリクエスト時に渡すheaders
       const headers = {
-        "Access-Token": access_token,
-        "Client": client,
-        "Uid": uid,
+        "Access-Token" : this.accessToken,
+        "Client" : this.client,
+        "Uid" : this.uid,
       };
 
       //Postリクエスト
