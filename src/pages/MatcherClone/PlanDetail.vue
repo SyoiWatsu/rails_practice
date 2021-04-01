@@ -14,6 +14,10 @@
 
 <script>
 import axios from "axios"; //axiosを使う準備
+import {getUserAuthHeaders} from "../../js/utils";
+
+const VISIT_APPLICATION_NEW_URL = "/api/v1/visit-application/new";
+const GET_CURRENT_USER_URL = "/api/current-user";
 
 //他のファイルでimportされたときに戻り値
 export default {
@@ -31,6 +35,10 @@ export default {
         userId: 0, //プラン作成者のuser_id
       },
       currentUserId: 0, //現在ログイン中のuser_id
+
+      accessToken : "",
+      client : "",
+      uid : "",
     };
   },
   watch: {
@@ -63,21 +71,10 @@ export default {
       //エンドポイントのURL
       const endpoint = "/api/v1/plans/" + this.plan.id;
 
-      //localStorageに保存してある各種ログインデータを取得
-      const access_token = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
 
       //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : access_token,
-        "Client" : client,
-        "Uid" : uid,
-      };
-      // ↑ 飛ばしてる先のshowアクションはbefore_actionで
-      // ログインしてるかどうか見てないから無しでもイケる。
-      // けど、一応残しておく。
-
+      const headers = getUserAuthHeaders();
+     
       //自身のvueインスタンスを変数vmに格納しておく
       let vm = this;
 
@@ -111,8 +108,6 @@ export default {
       const result = confirm(msg);
       if(result == false){ return }
 
-      //エンドポイントのURL
-      const endpoint = "/api/v1/visit-application/new";
 
       //Postリクエスト時に渡すbody
       const body = {
@@ -121,19 +116,10 @@ export default {
         status: "waiting",
       };
 
-      //localStorageに保存してある各種ログインデータを取得
-      const access_token = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
-
       //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : access_token,
-        "Client" : client,
-        "Uid" : uid,
-      };
-      
-      const response = await axios.post(endpoint, body, {
+      const headers = getUserAuthHeaders();
+
+      const response = await axios.post(VISIT_APPLICATION_NEW_URL, body, {
         headers : headers,
       })
       .catch(function(error){
@@ -146,36 +132,21 @@ export default {
                     "so you cannot apply this plan.";
         alert(msg);
       }
-
-      console.log(response.status);
     },
 
     //現在ログイン中のユーザーを取得
     fetchCurrentUser : async function(){
-      const endpoint = "/api/current-user";
-
-      //localStorageに保存してある各種ログインデータを取得
-      const access_token = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
-      console.log("access_token : " + access_token);
-
+      
       //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : access_token,
-        "Client" : client,
-        "Uid" : uid,
-      };
+      const headers = getUserAuthHeaders();
 
       //Getリクエスト
-      const response = await axios.get(endpoint, {
+      const response = await axios.get(GET_CURRENT_USER_URL, {
         headers : headers,
         data : {},
       });
 
-      console.log(response);
       this.currentUserId = response.data.current_user.id;
-      console.log("this.currentUserId : " + this.currentUserId);
     },
   },
 }

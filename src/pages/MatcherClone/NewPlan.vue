@@ -22,6 +22,10 @@
 
 <script>
 import axios from "axios"; //axiosを使う準備
+import {getUserAuthHeaders, fetchCurrentUser} from "../../js/utils";
+
+const PLANS_NEW_URL = "/api/v1/plans/new";
+const GET_CURRENT_USER_URL = "/api/current-user";
 
 //他のファイルでimportされたときに戻り値
 export default {
@@ -39,6 +43,9 @@ export default {
         uid : "",
         name : "",
       },
+      accessToken : "",
+      client : "",
+      uid : "",
     };
   },
   watch: {
@@ -46,18 +53,15 @@ export default {
   created() {
   },
   mounted() {
-    this.fetchCurrentUser();
+    this.init();
   },
   methods: {
-    createNewPlan : function(){
+    async createNewPlan() {
 
       if(this.title === "" || this.detail === ""){
         alert("There is a blank field.");
         return;
       }
-
-      //エンドポイントのURL
-      const endpoint = "/api/v1/plans/new";
 
       //Postリクエスト時に渡すbody
       const body = {
@@ -65,40 +69,19 @@ export default {
         detail : this.detail,
       }
 
-      //localStorageに保存してある各種ログインデータを取得
-      const access_token = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
-      console.log("access_token : " + access_token);
-
       //Postリクエスト時に渡すheaders
       const headers = {
-        "Access-Token" : access_token,
-        "Client" : client,
-        "Uid" : uid,
+        "Access-Token" : this.access_token,
+        "Client" : this.client,
+        "Uid" : this.uid,
       };
-      // ↑コレでイケた！！！
-      // が、なぜこれでイケたのかは良く分からない...
-      // なんでリクエストヘッダーにこれを渡せばイケる？
-      // 公式ドキュメントにも「こう書いてね」みたいの特に無かったし...(見つけることできてないだけ？)
-      // あとで良く見てみる (→https://devise-token-auth.gitbook.io/devise-token-auth/)
 
       //自身のvueインスタンスを変数vmに格納しておく
       let vm = this;
 
       //Postリクエスト
-      axios.post(endpoint, body, {
+      await axios.post(PLANS_NEW_URL, body, {
         headers : headers
-      })
-      .then(function(response){ //処理成功
-        console.log(response);
-
-        const msg = "保存に成功しました！" + "\n" + 
-                    "title : " + vm.title + "\n" + 
-                    "detail : " + vm.detail;
-        alert(msg);
-
-        vm.$router.push({name : "PlanIndex"}); //PlanIndexに画面遷移
       })
       .catch(function(error){ //処理失敗
         console.log(error);
@@ -106,37 +89,32 @@ export default {
         alert("保存に失敗しました...");
       });
 
+      //メッセージ表示
+      const msg = "保存に成功しました！" + "\n" + 
+                  "title : " + vm.title + "\n" + 
+                  "detail : " + vm.detail;
+      alert(msg);
+
+      //PlanIndexに画面遷移
+      vm.$router.push({name : "PlanIndex"});
     },
 
     //現在ログイン中のユーザーを取得
-    fetchCurrentUser : async function(){
-      const endpoint = "/api/current-user";
-
-      //localStorageに保存してある各種ログインデータを取得
-      const access_token = localStorage.getItem("access-token");
-      const client = localStorage.getItem("client");
-      const uid = localStorage.getItem("uid");
-      console.log("access_token : " + access_token);
+    async init() {
 
       //Postリクエスト時に渡すheaders
-      const headers = {
-        "Access-Token" : access_token,
-        "Client" : client,
-        "Uid" : uid,
-      };
+      const headers = getUserAuthHeaders();
 
-      //Getリクエスト
-      const response = await axios.get(endpoint, {
-        headers : headers,
-        data : {},
-      });
+      // 取得した値を使い回す為にプロパティに
+      this.accessToken = headers.accessToken;
+      this.uid = headers.uid;
+      this.client = headers.client;
 
-      console.log(response);
-      const currentUser = response.data.current_user;
+      const currentUser = await fetchCurrentUser();
+
       this.currentUser.id = currentUser.id;
       this.currentUser.uid = currentUser.uid;
       this.currentUser.name = currentUser.name;
-
     },
   },
 }

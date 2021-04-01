@@ -7,6 +7,8 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   has_many :plans
-  has_many :visit_applications
+  has_many :receive_visit_applications, class_name: 'VisitApplication', foreign_key: :authorizer_id
+  has_many :send_visit_applications, class_name: 'VisitApplication', foreign_key: :applicant_id
   has_many :plans, through: :visit_applications
+
 end

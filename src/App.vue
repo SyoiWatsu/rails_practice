@@ -22,7 +22,7 @@
         span / 
         router-link.link(:to="{ name: 'NewPlan' }") NewPlan
         span / 
-        router-link.link(:to="{ name: 'PlanDetail' }") PlanDetail
+        router-link.link(:to="{ name: 'Notification' }") Notification
         span / 
     .main
       router-view
